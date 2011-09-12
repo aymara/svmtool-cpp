@@ -1,0 +1,47 @@
+project(svmtool)
+cmake_minimum_required(VERSION 2.6)
+
+include(CheckCXXCompilerFlag)
+include(SystemSpecificInformations.cmake)
+
+
+CHECK_CXX_COMPILER_FLAG(-std=c++0x HAVE_STDCPP0X)
+
+if (HAVE_STDCPP0X)
+  set(CMAKE_CXX_FLAGS "-std=c++0x -W -Wall -DBOOST_NO_HASH")
+else (HAVE_STDCPP0X)
+  set(CMAKE_CXX_FLAGS "-W -Wall -DNO_STDCPP0X")
+endif (HAVE_STDCPP0X)
+
+add_subdirectory(src)
+add_subdirectory(sample)
+
+install(FILES
+    config.svmt
+DESTINATION etc)
+
+install(FILES
+    SVMTOOL++Config.cmake
+DESTINATION share/cmake/Modules)
+
+
+########### packaging ###############
+INCLUDE(InstallRequiredSystemLibraries)
+
+set(CPACK_MONOLITHIC_INSTALL 1)
+SET(CPACK_PACKAGE_NAME "svmtool++")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The SVMTool PoS tagger C++ implementation")
+SET(CPACK_PACKAGE_VENDOR "Jesus Gimenez")
+SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.TXT")
+SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LGPL.txt")
+SET(CPACK_PACKAGE_VERSION_MAJOR "1")
+SET(CPACK_PACKAGE_VERSION_MINOR "1")
+SET(CPACK_PACKAGE_VERSION_PATCH "6")
+SET(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}")
+SET(CPACK_STRIP_FILES "")
+SET(CPACK_SOURCE_STRIP_FILES "")
+set(CPACK_GENERATOR ${SPECIFIC_SYSTEM_PREFERED_CPACK_GENERATOR})
+# set(CPACK_RPM_PACKAGE_REQUIRES "")
+# set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+
+INCLUDE(CPack)

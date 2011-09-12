@@ -1,0 +1,6 @@
+TO DO
+-----
+
+* encapsulate token information in an ENTRY object class
+  - info on possible tags would be contained in it
+  

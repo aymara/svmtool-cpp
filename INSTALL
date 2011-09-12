@@ -1,0 +1,18 @@
+SVMTool++ uses the cmake (1) build system.
+
+To build, just do the following steps:
+- create a folder where to build:
+% mkdir /path/to/build/folder
+- move to this folder:
+% cd /path/to/build/folder
+- run cmake, optionaly specifying a build type (Release, RelWithDebInfo or
+Debug) and an installation directory (default is specific to you system,
+usualy /usr/local):
+% cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/path/to/install/dir /path/to/svmtool
+- run make:
+% make
+- install:
+% make install
+
+
+(1) http://www.cmake.org/
