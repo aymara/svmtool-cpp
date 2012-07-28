@@ -54,7 +54,7 @@ class reader
      *   - -1 end of sentence
      *   - -2 end of file
      */
-    int parseWord(std::string& token, std::set<std::string> tags, std::string &comment);
+    int parseWord(std::string& token, std::set<std::string> &tags, std::string &comment);
     bool good() { return is_good; }
 
   private:

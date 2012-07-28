@@ -648,10 +648,12 @@ int swindow::iniList(dictionary* dic)
 
   for(j=posIndex; ((j<lengthWin) && (ret>=0)); j++) ret = readInput(dic);
 
-  //ret >1 correct
-  //     0 if end of sentence
-  //    -1 if there aren't words
-  //    -2 if end of file
+  /*
+   * ret codes:
+   *   - 0 normal sentence
+   *   - -1 end of sentence
+   *   - -2 end of file
+   */
   if (ret>=0) ret=j-posIndex-1;
 	
   return ret;

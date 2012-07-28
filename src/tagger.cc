@@ -31,6 +31,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <cassert>
+
 
 /***************************************************************/
 
@@ -533,7 +535,7 @@ void tagger::taggerDoNormal(int *numWords, int *numSentences)
 {
   int contWordsLR=0,contWordsRL=0,contSentences=0,ret = 1;
 
-  while ((ret>=0))
+  while (ret!=-2)
   {
     if (verbose) taggerShowVerbose(contSentences,0);
 
@@ -557,7 +559,7 @@ void tagger::taggerDoSpecialForUnknown(int *numWords, int *numSentences)
 {
   int contWordsLR=0,contWordsRL=0,contSentences=0,ret = 1;
 
-  while ((ret>=0))
+  while (ret != -2)
   {
     if (verbose) taggerShowVerbose(contSentences,0);
 
@@ -582,7 +584,7 @@ void tagger::taggerDoNTimes(int *numWords, int *numSentences,int laps)
 {
   int contWordsLR=0,contWordsRL=0,contSentences=0,ret = 1;
 
-  while ((ret>=0))
+  while (ret != -2)
   {
     if (verbose) taggerShowVerbose(contSentences,0);
 
@@ -617,17 +619,22 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
   struct  tms tbuffStartSVM,tbuffEndSVM;
   clock_t startSVMTime,endSVMTime;
 
-  weight_node_t *weight;
+  std::vector<weight_node_t> weight;
   weightRepository *weightRep;
-  int numMaybe,max=0;
+  unsigned int numMaybe;
+  int max=0;
   int is_unk=FALSE;
   simpleList<nodo_feature_list*> *featureList;
 
   startFexTime = times(&tbuffStartFex);
 
   dataDict* i = d->getElement(elem->wrd);
-  if ((long)i!=HASH_FAIL)
-  {
+  if (!userWeight.empty()) {
+    weight = userWeight;
+    featureList = &taggerModelRunning->featureList;
+    weightRep = taggerModelRunning->wr;
+    numMaybe = weight.size();
+  } else if ((long)i!=HASH_FAIL) {
     featureList = &taggerModelRunning->featureList;
     numMaybe = d->getElementNumMaybe(i);
     weight = taggerCreateWeightNodeArray(numMaybe,i);
@@ -659,6 +666,8 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
     }
   }
 
+  assert(numMaybe == weight.size());
+  numMaybe = weight.size();
 
   if (numMaybe>1)
   {
@@ -675,6 +684,7 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
       else if (is_unk==TRUE)
       {
         int *param;
+        assert(!aux->l.isEmpty());
         if (!aux->l.isEmpty())
         {
           param = *aux->l.getIndex();
@@ -707,6 +717,7 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
 
     startSVMTime = times(&tbuffStartSVM);
 
+
     elem->strScores = taggerSumWeight(weightRep,weight,numMaybe,&max);
     //std::cerr << "tagger::taggerGenerateScore got elem strScores: '" << elem->strScores << "'" << std::endl;
 
@@ -715,6 +726,7 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
     usrSVMTime = usrSVMTime + (((double)tbuffEndSVM.tms_utime-(double)tbuffStartSVM.tms_utime)/CLOCKS_PER_SECOND);
     sysSVMTime = sysSVMTime + (((double)tbuffEndSVM.tms_stime-(double)tbuffStartSVM.tms_stime)/CLOCKS_PER_SECOND);
   }
+
 
   elem->pos = weight[max].pos;
   elem->weight = weight[max].data;
@@ -727,7 +739,6 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
     elem->stackScores.push(score);
   }
 
-  delete[] weight;
 }
 
 
@@ -735,10 +746,10 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
 /***************************************************************/
 
 /* Returns an array ready to be filled with maybe informations */
-weight_node_t *tagger::taggerCreateWeightNodeArray(int numMaybe,dataDict* index)
+std::vector<weight_node_t> tagger::taggerCreateWeightNodeArray(unsigned int numMaybe,dataDict* index)
 {
-  int j = numMaybe;
-  weight_node_t *weight = new weight_node_t[numMaybe];
+  unsigned int j = numMaybe;
+  std::vector<weight_node_t> weight(numMaybe);
   simpleList<infoDict*> *list = &d->getElementMaybe(index);
   
   bool ret=true;
@@ -752,12 +763,24 @@ weight_node_t *tagger::taggerCreateWeightNodeArray(int numMaybe,dataDict* index)
     }
 
   list->setFirst();
+  assert(1 > 0);
   return weight;
 }
 
+
+void tagger::setPossibles(const std::vector<std::string> &possibles) {
+  userWeight.clear();
+  userWeight.reserve(possibles.size());
+  for(vector<std::string>::const_iterator it = possibles.begin(); it != possibles.end(); it++) {
+    weight_node_t w(*it);
+    userWeight.push_back(w);
+  }
+}
+
+
 /***************************************************************/
 
-std::string tagger::taggerSumWeight(weightRepository* wRep, weight_node_t* weight, int numMaybe, int* max)
+std::string tagger::taggerSumWeight(weightRepository* wRep, std::vector<weight_node_t> &weight, unsigned int numMaybe, int* max)
 {
 //   weight_node_t *aux;
   long double w,b = 0;
@@ -769,7 +792,7 @@ std::string tagger::taggerSumWeight(weightRepository* wRep, weight_node_t* weigh
     *max=0;
     feature = stk.top();
     stk.pop();
-    for (int j=0; j<numMaybe;j++)
+    for (unsigned int j=0; j<numMaybe;j++)
     {
       if (putBias)
         {
@@ -778,14 +801,16 @@ std::string tagger::taggerSumWeight(weightRepository* wRep, weight_node_t* weigh
         }
       w = wRep->wrGetWeight(feature,weight[j].pos);
       weight[j].data=weight[j].data+w;
-      if (((float)weight[*max].data)<((float)weight[j].data)) *max=j;
+      if (weight[*max].data < weight[j].data) {
+        *max=j;
+      }
     }
     putBias=0;
   }
   std::ostringstream tmp;
   if ( true )
   {
-    for (int i=0; i<numMaybe; i++)
+    for (unsigned int i=0; i<numMaybe; i++)
     {
       if ( i == 0 )
       {
@@ -804,9 +829,9 @@ std::string tagger::taggerSumWeight(weightRepository* wRep, weight_node_t* weigh
 /***************************************************************/
 /***************************************************************/
 
-weight_node_t *tagger::taggerCreateWeightUnkArray(int *numMaybe)
+std::vector<weight_node_t> tagger::taggerCreateWeightUnkArray(unsigned int *numMaybe)
 {
-  int i=0;
+  unsigned int i=0;
   char c=' ';
   FILE *f;
   std::string name = taggerModelName + ".UNKP";
@@ -827,7 +852,7 @@ weight_node_t *tagger::taggerCreateWeightUnkArray(int *numMaybe)
   // second read, fill in the weight nodes
   fseek(f,0,SEEK_SET);
 
-  weight_node_t *weight = new weight_node_t[*numMaybe];
+  std::vector<weight_node_t> weight(*numMaybe);
   while (!feof(f) && (i<*numMaybe))
     { weight[i].pos = "";
     weight[i].data=0;

@@ -66,4 +66,6 @@ install(FILES
   swindow.h
   dict.h
   er.h
+  reader.h
+  nodo.h
 DESTINATION  include/svmtool)

@@ -441,7 +441,7 @@ void dictionary::addBackupEntry(const std::string& token, const std::set<std::st
     aux->numMaybe = 0;
     d.hash_insert(aux->wrd,aux);
   }
-  
+
   for (std::set<std::string>::const_iterator it = tags.begin(); it != tags.end(); it++)
   {
     infoDict* data = new infoDict();
@@ -450,24 +450,25 @@ void dictionary::addBackupEntry(const std::string& token, const std::set<std::st
     bool ret=true;
     aux->maybe.setFirst();
     //If not found add it to the list
-    for (int j=aux->numMaybe;ret &&  j>0; j--)
+    for (int j=aux->numMaybe; j>0; j--)
     {
       infoDict *element = *aux->maybe.getIndex();
       if (data->pos == element->pos)
       {
         ret = false;
+        // increase the number of occurences
         element->num += data->num;
       }
-      else ret = aux->maybe.next();
+      aux->maybe.next();
     }
     aux->maybe.setFirst();
     
     //If not found add it to the list
     if (ret)
     {
-//       std::cerr << "add possible tag '"<<data->pos<<"' for token '"<<token<<"'" << std::endl;
       aux->maybe.add(data);
       aux->numMaybe++;
+      aux->maybe.setFirst();
     }
     else delete data;
   }

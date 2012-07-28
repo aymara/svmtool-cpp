@@ -68,7 +68,7 @@ nodo* reader::buildNode(std::string &word, std::string &comment)
   return node;
 }
 
-int reader::parseWord(std::string& token, std::set<std::string> tagset, std::string &comment)
+int reader::parseWord(std::string& token, std::set<std::string> &tagset, std::string &comment)
 {
   if (m_input.eof()) {
     is_good = false;
@@ -92,7 +92,7 @@ int reader::parseWord(std::string& token, std::set<std::string> tagset, std::str
 
 
   // are tags real tags or only a comment?
-  if(!tags.empty() && tags[0] != '(') {
+  if(!tags.empty() && tags[0] == '(') {
     // parse the tags
  
     // remove parentheses around tags list

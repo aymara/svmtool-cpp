@@ -55,11 +55,14 @@ class tagger
     int taggerRightSense();
     int taggerLeftSense();
 
-    std::string taggerSumWeight(weightRepository* wRep, weight_node_t* weight, int numMaybe, int* max);
+    std::vector<weight_node_t> userWeight;
+    void setPossibles(const std::vector<std::string> &possibles);
+
+    std::string taggerSumWeight(weightRepository* wRep, std::vector<weight_node_t> &weight, unsigned int numMaybe, int* max);
     void taggerGenerateScore(nodo *elem,int direction);
 
-    weight_node_t *taggerCreateWeightNodeArray(int numMaybe, dataDict* index);
-    weight_node_t *taggerCreateWeightUnkArray(int *numMaybe);
+    std::vector<weight_node_t> taggerCreateWeightNodeArray(unsigned int numMaybe, dataDict* index);
+    std::vector<weight_node_t> taggerCreateWeightUnkArray(unsigned int *numMaybe);
     hash_t<weight_node_t*> *taggerCreateBiasHash(const std::string& name);
     void taggerLoadModels(models_t *model, int taggerNumModel);
 

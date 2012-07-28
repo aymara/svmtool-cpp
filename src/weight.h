@@ -24,6 +24,7 @@
 struct weight_node_t
 {
   weight_node_t() : pos(), data(0) {}
+  weight_node_t(std::string _pos) : pos(_pos), data(0) {}
   std::string pos;
   long double data;
 };
