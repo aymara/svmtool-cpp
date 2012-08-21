@@ -684,8 +684,9 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
       else if (aux->mark == MFTMARK)  sw->winPushMFTFeature((void *)aux,d,stk,direction);
       else if (is_unk==TRUE)
       {
-        int *param;
-        assert(!aux->l.isEmpty());
+        int *param = NULL;
+        // when aux->l is empty, our feature has no parameters (eg. "lower
+        // case"), so param can be left unitialized.
         if (!aux->l.isEmpty())
         {
           param = *aux->l.getIndex();
