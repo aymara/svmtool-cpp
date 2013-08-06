@@ -676,8 +676,9 @@ int swindow::iniList(dictionary* dic)
   /*
    * ret codes:
    *   - 0 normal sentence
-   *   - -1 end of sentence
-   *   - -2 end of file
+   *   - -1 end of sentence: punctuation
+   *   - -2 end of sentence: new line
+   *   - -3 end of file
    */
   if (ret>=0) ret=j-posIndex-1;
 	
@@ -707,7 +708,10 @@ int swindow::readInput(dictionary* dic) {
   while((ret = m_reader.parseWord(word, tagset, comment)) == 1);
   nodo* node = m_reader.buildNode(word, comment);
 
-  winAdd(node);
+  // only add node if not end of file
+  if (ret != -3) {
+    winAdd(node);
+  }
   if(!tagset.empty()) dic->addBackupEntry(word, tagset);
 
   return ret;
@@ -888,6 +892,13 @@ int swindow::show(int showScoresFlag, int showComments)
   nodo *actual = first;
 
   while(actual != NULL) {
+    // special treatment for empty tokens that separate sentences
+    if (actual->wrd.empty()) {
+      *m_output << std::endl;
+      actual = actual->next;
+      continue;
+    }
+
     *m_output << actual->realWrd << " " << actual->pos;
 
     if ( showScoresFlag == TRUE && !actual->strScores.empty() ) {

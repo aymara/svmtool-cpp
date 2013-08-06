@@ -536,7 +536,7 @@ void tagger::taggerDoNormal(int *numWords, int *numSentences)
 {
   int contWordsLR=0,contWordsRL=0,contSentences=0,ret = 1;
 
-  while (ret!=-2)
+  while (ret != -3)
   {
     if (verbose) taggerShowVerbose(contSentences,0);
 
@@ -614,6 +614,10 @@ void tagger::taggerDoNTimes(int *numWords, int *numSentences,int laps)
 
 void tagger::taggerGenerateScore(nodo *elem,int direction)
 {
+  // no tag for empty lines
+  if (elem->wrd.empty()) {
+    return;
+  }
 
   struct  tms tbuffStartFex,tbuffEndFex;
   clock_t startFexTime,endFexTime;
