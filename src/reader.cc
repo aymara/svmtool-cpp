@@ -118,6 +118,16 @@ int reader::parseWord(std::string& token, std::set<std::string> &tagset, std::st
   if (token == "." || token == "?" || token == "!")
     return -1;
 
+  // if we just parsed the last word in the file,
+  // we also want to indicate that we are at the end of the file
+  // this prevents tagging an empty word
+  // m_input.eof() will be true if the file has no new line at the end
+  // m_input.peek() == EOF will be true if the file has a new line at the end
+  if (m_input.eof() || m_input.peek() == EOF) {
+    is_good = false;
+    return -2;
+  }
+
   return 0;
 }
 

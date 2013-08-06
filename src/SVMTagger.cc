@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
 
 	t.taggerLoadModelsForTagging();
 
-	t.taggerInit(std::cin, std::cerr);
+	t.taggerInit(std::cin, std::cout);
 	t.taggerRun();
 
 	erFreeRegExp();

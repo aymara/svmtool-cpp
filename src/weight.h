@@ -29,7 +29,16 @@ struct weight_node_t
   long double data;
 };
 
-class weight_struct_t;
+//Definición de weight_struct_t
+class weight_struct_t
+{
+public:
+  std::string key;
+  hash_t<weight_node_t*> *hash;
+
+  // free inner memory and then free the hash.
+  ~weight_struct_t();
+};
 
 class  weightRepository
 {

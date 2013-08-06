@@ -40,21 +40,9 @@
 
 /***********************************************************/
 
-//Definición de weight_struct_t
-class weight_struct_t
-{
-public:
-  std::string key;
-  hash_t<weight_node_t*> *hash;
-
-  // free inner memory and then free the hash.
-  ~weight_struct_t()
-  {
+weight_struct_t::~weight_struct_t() {
     hash->hash_destroy();
-  }
-};
-
-
+}
 
 /***********************************************************/
 

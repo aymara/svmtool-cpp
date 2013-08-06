@@ -721,7 +721,6 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
 
 
     elem->strScores = taggerSumWeight(weightRep,weight,numMaybe,&max);
-    //std::cerr << "tagger::taggerGenerateScore got elem strScores: '" << elem->strScores << "'" << std::endl;
 
     endSVMTime = times(&tbuffEndSVM);
     realSVMTime = realSVMTime + ((double)(endSVMTime-startSVMTime))/CLOCKS_PER_SECOND;
@@ -788,7 +787,6 @@ std::string tagger::taggerSumWeight(weightRepository* wRep, std::vector<weight_n
   long double w,b = 0;
   std::string feature;
   int putBias=1;
-
   while (!stk.empty())
   {
     *max=0;
@@ -824,7 +822,6 @@ std::string tagger::taggerSumWeight(weightRepository* wRep, std::vector<weight_n
       }
     }
   }
-  //std::cerr << "tagger::taggerSumWeight generated string '" << tmp.str() << "'" << std::endl;
   return tmp.str();
 }
 

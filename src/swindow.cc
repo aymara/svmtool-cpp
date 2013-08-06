@@ -482,7 +482,7 @@ void swindow::winPushPosFeature(void* ptr, dictionary* d, std::stack<std::string
   nodo_feature_list *p = (nodo_feature_list *)ptr;
   nodo *pn;
   infoDict *pInfoDict;
-  std::string feature;
+  std::stringstream feature;
 
   int *num;
 
@@ -490,6 +490,12 @@ void swindow::winPushPosFeature(void* ptr, dictionary* d, std::stack<std::string
   while (!end)
   {
     num = *p->l.getIndex();
+    
+    if (feature.rdbuf()->in_avail() == 0) {
+      feature << p->mark << *num;
+    } else {
+      feature << "," << *num;
+    }
 
     pn = get(*num, direction);
 
@@ -527,9 +533,9 @@ void swindow::winPushPosFeature(void* ptr, dictionary* d, std::stack<std::string
   }
   p->l.setFirst();
 
-  feature = ":" + value;
+  feature <<  ":" << value;
   //std::cerr << feature << std::endl;
-  pila.push(feature);
+  pila.push(feature.str());
 }
 
 /*
@@ -633,10 +639,29 @@ int swindow::iniGeneric(dictionary* dic)
   endWin = last;
   if (ret>=0) readSentence(dic);
 
-  if (ret==-1) return -1;
-  else if (ret==0) posEnd = posIndex+last->ord;
-  else posEnd=posIndex+ret;
+  // case where the sentence is smaller than the window length (lengthWin)
+  if (numObj < lengthWin) {
+    posEnd = numObj;
+    // if the sentence is smaller than the window length and ends with a period,
+    // beginWin needs to be initialized, otherwise, it won't be because of the
+    // return -1 statement below
+    beginWin = first;
+  }
 
+  if (ret==-1) {
+    return -1;
+  }
+  // modify posEnd only if the sentence is longer than the window length (lengthWin)
+  if (numObj >= lengthWin) {
+    if (ret==0) {
+      posEnd = posIndex+last->ord;
+    } else {
+      posEnd = posIndex+ret;
+    }
+  }
+
+  // if the sentence is longer than the window length, ret is not equal to -1
+  // and beginWin gets initialized here.
   beginWin = first;
 
   return ret;
