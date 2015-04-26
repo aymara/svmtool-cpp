@@ -1,0 +1,17 @@
+language: cpp
+compiler: gcc
+env:
+  global:
+  - secure: 
+install:
+- cat /etc/*-release
+- echo `echo 2 | sudo update-alternatives --config gcc`
+- sudo add-apt-repository --yes ppa:kubuntu-ppa/backports
+- sudo apt-get update
+- sudo apt-get install -qq -y cmake gdb
+script: pwd && mkdir dist && mkdir build && cd build && cmake .. && make && make package
+after_success:
+        - curl -T /home/travis/build/aymara/svmtool-cpp/build/svmtool-cpp-0.0.1-Linux.deb
+          -ukleag:$BINTRAYKEY https://api.bintray.com/content/kleag/ubuntu-12.04/svmtool-cpp/$TRAVIS_JOB_NUMBER/$TRAVIS_JOB_NUMBER/svmtool-cpp-0.0.1-Linux.deb
+- curl -XPOST -ukleag:$BINTRAYKEY https://api.bintray.com/content/kleag/ubuntu-12.04/svmtool-cpp/$TRAVIS_JOB_NUMBER/publish
+- curl -XGET https://bintray.com/kleag/ubuntu-12.04/svmtool-cpp/$TRAVIS_JOB_NUMBER
