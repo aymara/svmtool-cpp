@@ -2,7 +2,7 @@ language: cpp
 compiler: gcc
 env:
   global:
-    secure: FqkIHCxz7OzNLWpTqSGZqptG5WU6smacEE5M7zJm+infBCQXtqhCUJO+XVVkR7+n/2fB8o3u/Bt6LpPM+Fw/GY9RjXV5xjuuNNJxR1omcrW+M1ssfZKNbqwxbOSkx7cwOQgzfHHfg95KpJxmN6iqk3t1PjKlG23nxxpzmqu+eUQ=
+    secure: X7vYsdnuullrVSCuHtTdO9m252YBijzqXzsaj0QIqS45vUrqafY7QS4B2/QYpEX14LN3G9/KjSO/QntY9v6xOsfH1KwhTpCRpjRataivi8uaYGK5LwL7mf3kmNeWbl4jzyUrXDcL9a2JReKlCtAGbNs73NcIMuHhXbqlJBr0Pus=
 install:
 - cat /etc/*-release
 - echo `echo 2 | sudo update-alternatives --config gcc`
@@ -11,6 +11,7 @@ install:
 - sudo apt-get install -qq -y cmake gdb
 script: pwd && mkdir dist && mkdir build && cd build && cmake .. && make && make package
 after_success:
-- curl -T /home/travis/build/aymara/svmtool-cpp/build/svmtool++-1.1.7-Linux.deb -ukleag:$BINTRAYKEY https://api.bintray.com/content/kleag/ubuntu-12.04/svmtool-cpp/$TRAVIS_JOB_NUMBER/$TRAVIS_JOB_NUMBER/svmtool++-1.1.7-Linux.deb
+- curl -T /home/travis/build/aymara/svmtool-cpp/build/svmtool++-1.1.7-Linux.deb -ukleag:$BINTRAYKEY
+  https://api.bintray.com/content/kleag/ubuntu-12.04/svmtool-cpp/$TRAVIS_JOB_NUMBER/$TRAVIS_JOB_NUMBER/svmtool++-1.1.7-Linux.deb
 - curl -XPOST -ukleag:$BINTRAYKEY https://api.bintray.com/content/kleag/ubuntu-12.04/svmtool-cpp/$TRAVIS_JOB_NUMBER/publish
 - curl -XGET https://bintray.com/kleag/ubuntu-12.04/svmtool-cpp/$TRAVIS_JOB_NUMBER
