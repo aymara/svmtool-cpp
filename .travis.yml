@@ -11,7 +11,7 @@ install:
 - sudo apt-get install -qq -y cmake gdb
 script: pwd && mkdir dist && mkdir build && cd build && cmake .. && make && make package
 after_success:
-- curl -T /home/travis/build/aymara/svmtool-cpp/build/svmtool++-1.1.7-Linux.deb -ukleag:$BINTRAYKEY
-  https://api.bintray.com/content/kleag/ubuntu-12.04/svmtool-cpp/$TRAVIS_JOB_NUMBER/$TRAVIS_JOB_NUMBER/svmtool++-1.1.7-Linux.deb
+- curl -T /home/travis/build/aymara/svmtool-cpp/build/svmtool-cpp-1.1.7-Linux.deb -ukleag:$BINTRAYKEY
+  https://api.bintray.com/content/kleag/ubuntu-12.04/svmtool-cpp/$TRAVIS_JOB_NUMBER/$TRAVIS_JOB_NUMBER/ svmtool++-1.1.7-Linux.deb
 - curl -XPOST -ukleag:$BINTRAYKEY https://api.bintray.com/content/kleag/ubuntu-12.04/svmtool-cpp/$TRAVIS_JOB_NUMBER/publish
 - curl -XGET https://bintray.com/kleag/ubuntu-12.04/svmtool-cpp/$TRAVIS_JOB_NUMBER
