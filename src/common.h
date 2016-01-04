@@ -19,7 +19,9 @@
 #ifndef COMMON_H
 
 #include <time.h>
+#ifndef WIN32
 #include <sys/times.h>
+#endif
 #include "list.h"
 #include <string>
 #include <algorithm>

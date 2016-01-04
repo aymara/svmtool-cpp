@@ -26,7 +26,11 @@
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef _WIN32
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
 #include <string>
 #include <algorithm>
 #include <vector>
@@ -1300,10 +1304,12 @@ void learner::learnerRun(const std::string& train)
       fprintf(stderr,"\n* PREPARING TRAINING");
       fprintf(stderr,"\n* ========================================================================");
     }
+#ifndef WIN32
   struct  tms tbuff1,tbuff2;
   clock_t start,end;
   start = times(&tbuff1);
-
+#endif
+  
   //Creamos el diccionario
   std::string name;
   name = std::string(NAME) + ".DICT";

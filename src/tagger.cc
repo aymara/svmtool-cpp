@@ -30,17 +30,21 @@
 #include <sstream>
 #include <string.h>
 #include <stdio.h>
+#ifdef _WIN32
+#include <io.h>
+#else
 #include <unistd.h>
-
+#endif
 #include <cassert>
-
 
 /***************************************************************/
 
+#ifndef WIN32
 struct tms  tbuffStartUp,tbuffEndStartUp;
 clock_t startUpTime,endStartUpTime;
 double  sysFexTime=0, usrFexTime=0,realFexTime=0;
 double  sysSVMTime=0, usrSVMTime=0,realSVMTime=0;
+#endif
 
 /***************************************************************/
 
@@ -172,8 +176,10 @@ void tagger::taggerLoadModels(models_t *model, int taggerNumModel)
 
 void tagger::taggerLoadModelsForTagging()
 {
+#ifndef WIN32
   startUpTime = times(&tbuffStartUp);
-
+#endif
+  
   int modelsNeeded=1;
 
   std::string name = taggerModelName + ".DICT";
@@ -479,10 +485,12 @@ void tagger::taggerRun()
 {
   int contWords=0,contSentences=0;
 
+#ifndef WIN32
   struct  tms     tbuff1,tbuff2;
   clock_t start,end;
   start = times(&tbuff1);
-
+#endif
+  
   switch(taggerStrategy)
   {
     case STRA_1P_DEFAULT/*modstrat 0*/: taggerDoNormal(&contWords,&contSentences); break;
@@ -619,11 +627,13 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
     return;
   }
 
+#ifndef WIN32
   struct  tms tbuffStartFex,tbuffEndFex;
   clock_t startFexTime,endFexTime;
   struct  tms tbuffStartSVM,tbuffEndSVM;
   clock_t startSVMTime,endSVMTime;
-
+#endif
+  
   std::vector<weight_node_t> weight;
   weightRepository *weightRep;
   unsigned int numMaybe;
@@ -716,20 +726,23 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
     }
     featureList->setFirst();
 
+#ifndef WIN32
     endFexTime = times(&tbuffEndFex);
     realFexTime = realFexTime + ((double)(endFexTime-startFexTime))/CLOCKS_PER_SECOND;
     usrFexTime = usrFexTime + (((double)tbuffEndFex.tms_utime-(double)tbuffStartFex.tms_utime)/CLOCKS_PER_SECOND);
     sysFexTime = sysFexTime + (((double)tbuffEndFex.tms_stime-(double)tbuffStartFex.tms_stime)/CLOCKS_PER_SECOND);
 
     startSVMTime = times(&tbuffStartSVM);
-
+#endif
 
     elem->strScores = taggerSumWeight(weightRep,weight,numMaybe,&max);
 
+#ifndef WIN32
     endSVMTime = times(&tbuffEndSVM);
     realSVMTime = realSVMTime + ((double)(endSVMTime-startSVMTime))/CLOCKS_PER_SECOND;
     usrSVMTime = usrSVMTime + (((double)tbuffEndSVM.tms_utime-(double)tbuffStartSVM.tms_utime)/CLOCKS_PER_SECOND);
     sysSVMTime = sysSVMTime + (((double)tbuffEndSVM.tms_stime-(double)tbuffStartSVM.tms_stime)/CLOCKS_PER_SECOND);
+#endif
   }
 
 
