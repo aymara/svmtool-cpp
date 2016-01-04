@@ -1,0 +1,35 @@
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+environment:
+  PATH: 'c:\d\bin;%PATH%'
+  BINTRAYKEY:
+    secure: SF9KK/1ShDAudlHJFsZro1MQOaYqjJ0Hb2mbJEvFyxPCLHtevjyxuLT1IrsSmE1o
+
+configuration: Release
+
+os: Visual Studio 2013
+
+
+build_script:
+  - mkdir c:\b
+  - cd c:\b
+  - cmake -G "Visual Studio 12 2013 Win64" ""-DCMAKE_BUILD_TYPE=Release" "-DCMAKE_INSTALL_PREFIX=c:\d" c:/projects/svmtool-cpp
+  - cmake --build . --config Release
+  - cmake --build . --config Release --target PACKAGE
+  
+
+  - ps: $user = "kleag"
+  - ps: $pass = $Env:BINTRAYKEY
+  - ps: $pair = "${user}:${pass}"
+  - ps: $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
+  - ps: $base64 = [System.Convert]::ToBase64String($bytes)
+  - ps: $basicAuthValue = "Basic $base64"
+  - ps: $headers = @{ Authorization = $basicAuthValue }
+  - ps: $commit = $Env:APPVEYOR_REPO_COMMIT
+  - ps: $commit  = $commit.substring(0,7)
+  - ps: Invoke-RestMethod  -Method PUT -Headers $headers -uri https://api.bintray.com/content/kleag/windows64/svmtool-cpp/$Env:APPVEYOR_BUILD_NUMBER/$Env:APPVEYOR_BUILD_NUMBER/svmtool-cpp-1.1.7-$commit-win64.exe?publish=1 -Infile C:/b/svmtool-cpp-1.1.7-win64.exe
+
+
+on_failure:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
