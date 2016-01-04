@@ -7,11 +7,29 @@ include(SystemSpecificInformations.cmake)
 
 CHECK_CXX_COMPILER_FLAG(-std=c++0x HAVE_STDCPP0X)
 
-if (HAVE_STDCPP0X)
-  set(CMAKE_CXX_FLAGS "-std=c++0x -W -Wall -DBOOST_NO_HASH")
-else (HAVE_STDCPP0X)
-  set(CMAKE_CXX_FLAGS "-W -Wall -DNO_STDCPP0X")
-endif (HAVE_STDCPP0X)
+if (NOT (${CMAKE_SYSTEM_NAME} STREQUAL "Windows"))
+  message("Linux flags")
+
+  if (HAVE_STDCPP0X)
+    set(CMAKE_CXX_FLAGS "-std=c++0x -W -Wall -DBOOST_NO_HASH")
+  else (HAVE_STDCPP0X)
+    set(CMAKE_CXX_FLAGS "-W -Wall -DNO_STDCPP0X")
+  endif (HAVE_STDCPP0X)
+  
+else ()
+
+  message("Windows flags")
+  add_definitions(-D WIN32)
+
+  # By default, do not warn when built on machines using only VS Express:
+  IF(NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
+    SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
+  ENDIF(NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
+
+  set(CMAKE_C_FLAGS "/Zc:wchar_t- /EHsc /GR ${CMAKE_C_FLAGS}")
+  set(CMAKE_CXX_FLAGS "/Zc:wchar_t- /EHsc /GR /W4 /MP /FAu ${CMAKE_CXX_FLAGS}")
+
+endif ()
 
 add_subdirectory(src)
 add_subdirectory(sample)
