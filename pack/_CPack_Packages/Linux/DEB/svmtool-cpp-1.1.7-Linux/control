@@ -1,0 +1,9 @@
+Package: svmtool-cpp
+Version: 1.1.7
+Section: devel
+Priority: optional
+Architecture: amd64
+Installed-Size: 1046
+Maintainer: Gael de Chalendar <Gael.de-Chalendar@cea.fr>
+Description: The SVMTool PoS tagger C++ implementation
+

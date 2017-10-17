@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/api.h
+
+/home/gael/Logiciels/svmtool++/sample/main.cc
+stdio.h
+-
+stdlib.h
+-
+api.h
+/home/gael/Logiciels/svmtool++/sample/api.h
+

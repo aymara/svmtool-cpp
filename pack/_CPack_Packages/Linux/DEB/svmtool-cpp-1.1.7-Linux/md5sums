@@ -1,0 +1,16 @@
+0880a0dd3c2d2b85a9190ba1016ff452  usr/lib/libsvmtool.so.1.1.6
+678b0b691727e7fd264eaa1af7291bc6  usr/bin/SVMTagger
+5551de30194d4ea6b73bd77b66182059  usr/bin/SVMTeval
+61d07b16b6b44a3ebc75e1b217703040  usr/bin/SVMTlearn
+939d80b12ad5e21ce8baa7cd36b24760  usr/include/svmtool/reader.h
+fc4e1ca182522d9a95e426f5694440d2  usr/include/svmtool/swindow.h
+263b6715a4ab36c305e3098a93f30ee7  usr/include/svmtool/weight.h
+93ae381af4ecd463b890e9023fd127cf  usr/include/svmtool/tagger.h
+a03bd16c936c51d564db85518f526e7c  usr/include/svmtool/common.h
+cb3835701fe22e085a01f4d90f651012  usr/include/svmtool/nodo.h
+8ccf2186b26d48a98fe20f707544f7b9  usr/include/svmtool/list.h
+de1f89a431b480eff30d3758cdedb1a3  usr/include/svmtool/hash.h
+347331217014616adcd9f0b4f24f4676  usr/include/svmtool/dict.h
+3a1e3ce7c58e28a759e08d0072c8c6cb  usr/include/svmtool/er.h
+b775dd89ffc143f836f83e25a7164325  usr/share/cmake/Modules/FindSVMTOOL++.cmake
+992edf055ac18f95d3cbea32ab00b895  usr/etc/config.svmt

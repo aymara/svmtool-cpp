@@ -13,6 +13,6 @@ before_install:
   - docker pull ubuntu:14.04 
 
 script:
-- docker build -f ./Dockerfile-ubuntu16.04 .
-- docker build -f ./Dockerfile-ubuntu14.04 .
+- docker build --build-arg BINTRAYKEY=$BINTRAYKEY  --build-arg TRAVIS_JOB_NUMBER=$TRAVIS_JOB_NUMBER -f ./Dockerfile-ubuntu16.04 .
+- docker build --build-arg BINTRAYKEY=$BINTRAYKEY  --build-arg TRAVIS_JOB_NUMBER=$TRAVIS_JOB_NUMBER -f ./Dockerfile-ubuntu14.04 .
 
