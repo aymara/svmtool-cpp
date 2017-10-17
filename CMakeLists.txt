@@ -4,6 +4,12 @@ cmake_minimum_required(VERSION 2.6)
 include(CheckCXXCompilerFlag)
 include(SystemSpecificInformations.cmake)
 
+if (NOT (${CMAKE_SYSTEM_NAME} STREQUAL "Windows"))
+    if ("x${CMAKE_BUILD_TYPE}" STREQUAL "xRelease")
+      set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -mtune=generic -march=x86-64")
+    endif()
+endif()
+
 
 CHECK_CXX_COMPILER_FLAG(-std=c++0x HAVE_STDCPP0X)
 
