@@ -935,7 +935,7 @@ void learner::learnerTrainModel(const std::string& trainingFileName, dictionary 
   {
     name.rdbuf()->str("");
     name << std::string(NAME)<<".M"<<numModel<<".LR.SAMPLES";
-    std::cerr << "Problematic file is '"<<name<<"'" << std::endl;
+    std::cerr << "Problematic file is '"<<name.str()<<"'" << std::endl;
     fKnownLR=openFile(name.str().c_str(),"w+");
     name.rdbuf()->str("");
     name << std::string(NAME) << ".UNK.M"<<numModel<<".LR.SAMPLES";
