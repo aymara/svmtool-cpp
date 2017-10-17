@@ -20,6 +20,6 @@ RUN make -j4
 RUN make package
 RUN curl -T /src/svmtool-cpp/build/svmtool-cpp-1.1.7-Linux.deb \
   -ukleag:$BINTRAYKEY \
-  https://api.bintray.com/content/kleag/ubuntu-14.04/svmtool-cpp/$TRAVIS_JOB_NUMBER/TRAVIS_JOB_NUMBER/svmtool++-1.1.7-Linux.deb
+  https://api.bintray.com/content/kleag/ubuntu-14.04/svmtool-cpp/$TRAVIS_JOB_NUMBER/$TRAVIS_JOB_NUMBER/svmtool++-1.1.7-Linux.deb
 RUN curl -XPOST -ukleag:$BINTRAYKEY \
   https://api.bintray.com/content/kleag/ubuntu-14.04/svmtool-cpp/$TRAVIS_JOB_NUMBER/publish
