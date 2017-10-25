@@ -45,16 +45,16 @@ install(TARGETS SVMTeval DESTINATION bin)
 
 ########### next target ###############
 
-SET(SVMTlearn_SRCS
-SVMTlearn.cc
-learner.cc
-)
-
-add_executable(SVMTlearn ${SVMTlearn_SRCS})
-
-target_link_libraries(SVMTlearn svmtool)
-
-install(TARGETS SVMTlearn DESTINATION bin)
+# SET(SVMTlearn_SRCS
+# SVMTlearn.cc
+# learner.cc
+# )
+# 
+# add_executable(SVMTlearn ${SVMTlearn_SRCS})
+# 
+# target_link_libraries(SVMTlearn svmtool)
+# 
+# install(TARGETS SVMTlearn DESTINATION bin)
 
 ########### install files ###############
 install(FILES
