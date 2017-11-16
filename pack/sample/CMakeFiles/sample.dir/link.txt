@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++0x -W -Wall -DBOOST_NO_HASH -O3 -DNDEBUG -mtune=generic -march=x86-64   CMakeFiles/sample.dir/main.cc.o  -o sample  -L/home/gael/Logiciels/svmtool++/pack/src -rdynamic ../src/libsvmtool.so.1.1.6 -Wl,-rpath,/home/gael/Logiciels/svmtool++/pack/src 
