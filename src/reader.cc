@@ -70,33 +70,45 @@ nodo* reader::buildNode(std::string &word, std::string &comment)
 
 int reader::parseWord(std::string& token, std::set<std::string> &tagset, std::string &comment)
 {
-  if (m_input.eof()) {
-    is_good = false;
-    return -3; // end of file
-  }
-
   // read the line
   std::string line, tags;
-  getline(m_input, line);
-
+  while (line.empty()) {
+    if (m_input.eof()) {
+      is_good = false;
+      return -3; // end of file
+    }
+    char c;
+    while (m_input.good() && (c=m_input.get()) != '\n') line.push_back(c);
+//     getline(m_input, line);
+  }
+//   std::cerr << "line: '" << line << "'" << std::endl;
   // checking for commented lines
   if (line.size() >= 2 && line[0] == '#' && line[1] == '#')
     return 1;
 
   // reading content: word (tag,tag,tag)
-  std::istringstream iss(line);
-  iss >> token >> tags;
-
+  auto position = line.find_first_of(' ');
+  if (position == std::string::npos) {
+    return -2; // new line: end of sentence that is not a punctuation mark
+  }
+  token = line.substr(0,position);
   if(token.empty())
     return -2; // new line: end of sentence that is not a punctuation mark
-
-
+  auto open = line.find_first_of(position+1, '(');
+  if (open == std::string::npos) {
+    return -2; // new line: end of sentence that is not a punctuation mark
+  }
+  auto close = line.find_first_of(open+1, ')');
+  if (close == std::string::npos) {
+    return -2;  // new line: end of sentence that is not a punctuation mark
+  }
+  tags = line.substr(open, close-open-1);
+  comment = line.substr(close+1);
   // are tags real tags or only a comment?
-  if(!tags.empty() && tags[0] == '(') {
+  if(!tags.empty()) {
     // parse the tags
  
     // remove parentheses around tags list
-    tags = tags.substr(1,tags.size()-2);
     int i = 0;
     std::string::size_type j = tags.find_first_of(',');
     while (j != std::string::npos)
@@ -108,10 +120,6 @@ int reader::parseWord(std::string& token, std::set<std::string> &tagset, std::st
     }
     std::string tag = tags.substr(i);
     tagset.insert(tag);
-  } else {
-    // tags is in fact only a comment
-    swap(comment, tags);
-    comment += line_end(iss);
   }
 
   // TODO this should be configurable - does not work in every language
