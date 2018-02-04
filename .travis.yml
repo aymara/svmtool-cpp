@@ -16,10 +16,10 @@ script:
 after_success:
 - docker run -t -d svmtoolpp-ubuntu16
 - docker cp $(docker ps -n 1 -q):/src/svmtool-cpp/build/svmtool-cpp-1.1.7-Linux.deb
-  /svmtool-cpp-1.1.7-ubuntu16.deb
+  $HOME/svmtool-cpp-1.1.7-ubuntu16.deb
 - docker run -t -d svmtoolpp-ubuntu14
 - docker cp $(docker ps -n 1 -q):/src/svmtool-cpp/build/svmtool-cpp-1.1.7-Linux.deb
-  /svmtool-cpp-1.1.7-ubuntu14.deb
+  $HOME/svmtool-cpp-1.1.7-ubuntu14.deb
 before_deploy:
 - git config --local user.name "Gael de Chalendar"
 - git config --local user.email "kleag@free.fr"
@@ -29,7 +29,7 @@ deploy:
   api_key:
     secure: ZRN8Fjl12B8kuvOldwC3GGGzG/1UgWhjzJRU89Uc0hXwD/nz1SgXJChFIUmHPvzOTGQYt31Rf2ixstaYIMH5C+EpDYRx+99gyY2KtriNaD2v04208CZPSgVIaMyb/X8WO+uXXuJCpo0GGuOKYgVIZOuHgtNJ4LvBgGX4z47FBcU=
   file_glob: true
-  file: /*.deb
+  file: $HOME/*.deb
   skip_cleanup: true
   on:
     repo: aymara/svmtool-cpp
