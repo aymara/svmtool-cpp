@@ -44,4 +44,6 @@ deploy:
   file: /*.deb
   skip_cleanup: true
   on:
-    tags: true
+    repo: aymara/lima
+    tags: false
+    all_branches: true
