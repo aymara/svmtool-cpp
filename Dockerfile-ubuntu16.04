@@ -5,7 +5,7 @@ ARG TRAVIS_JOB_NUMBER
 
 # Setup
 RUN apt-get update -y -qq
-RUN apt-get install -y apt-utils git gcc g++ autotools-dev dh-autoreconf cmake cmake-data ninja-build -qq
+RUN apt-get install -y apt-utils git gcc g++ cmake cmake-data ninja-build -qq
 RUN apt-get update -y -qq
 RUN mkdir -p /src/
 RUN git clone https://github.com/aymara/svmtool-cpp /src/svmtool-cpp
