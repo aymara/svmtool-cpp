@@ -28,7 +28,9 @@ deploy:
   provider: releases
   api_key:
     secure: ZRN8Fjl12B8kuvOldwC3GGGzG/1UgWhjzJRU89Uc0hXwD/nz1SgXJChFIUmHPvzOTGQYt31Rf2ixstaYIMH5C+EpDYRx+99gyY2KtriNaD2v04208CZPSgVIaMyb/X8WO+uXXuJCpo0GGuOKYgVIZOuHgtNJ4LvBgGX4z47FBcU=
-  file: "/*.deb"
+  file_glob: true
+  file: /*.deb
+  skip_cleanup: true
   on:
     repo: aymara/svmtool-cpp
     tags: false
