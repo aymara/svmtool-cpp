@@ -9,21 +9,21 @@ before_install:
 - docker pull ubuntu:16.04
 - docker pull ubuntu:14.04
 script:
-- docker build --tag svmtoolpp-ubuntu16 --build-arg BINTRAYKEY=$BINTRAYKEY --build-arg
+- docker build --tag svmtoolpp-ubuntu16 --build-arg 
   TRAVIS_JOB_NUMBER=$TRAVIS_JOB_NUMBER -f ./Dockerfile-ubuntu16.04 .
-- docker build --tag svmtoolpp-ubuntu14 --build-arg BINTRAYKEY=$BINTRAYKEY --build-arg
-  TRAVIS_JOB_NUMBER=$TRAVIS_JOB_NUMBER -f ./Dockerfile-ubuntu14.04 .
+- docker build --tag svmtoolpp-debian9 --build-arg
+  TRAVIS_JOB_NUMBER=$TRAVIS_JOB_NUMBER -f ./Dockerfile-debian9.4 .
 after_success:
 - docker run -t -d svmtoolpp-ubuntu16
 - docker cp $(docker ps -n 1 -q):/src/svmtool-cpp/build/svmtool-cpp-1.1.7-Linux.deb
   $HOME/svmtool-cpp-1.1.7-ubuntu16.deb
-- docker run -t -d svmtoolpp-ubuntu14
+- docker run -t -d svmtoolpp-debian9.4
 - docker cp $(docker ps -n 1 -q):/src/svmtool-cpp/build/svmtool-cpp-1.1.7-Linux.deb
-  $HOME/svmtool-cpp-1.1.7-ubuntu14.deb
+  $HOME/svmtool-cpp-1.1.7-debian9.deb
 before_deploy:
 - git config --local user.name "Gael de Chalendar"
 - git config --local user.email "kleag@free.fr"
-- git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+- git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)" || true
 deploy:
   provider: releases
   api_key:
