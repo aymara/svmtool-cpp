@@ -7,7 +7,7 @@ env:
     secure: X7vYsdnuullrVSCuHtTdO9m252YBijzqXzsaj0QIqS45vUrqafY7QS4B2/QYpEX14LN3G9/KjSO/QntY9v6xOsfH1KwhTpCRpjRataivi8uaYGK5LwL7mf3kmNeWbl4jzyUrXDcL9a2JReKlCtAGbNs73NcIMuHhXbqlJBr0Pus=
 before_install:
 - docker pull ubuntu:16.04
-- docker pull ubuntu:14.04
+- docker pull debian:9.4
 script:
 - docker build --tag svmtoolpp-ubuntu16 --build-arg 
   TRAVIS_JOB_NUMBER=$TRAVIS_JOB_NUMBER -f ./Dockerfile-ubuntu16.04 .
