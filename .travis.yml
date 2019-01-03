@@ -6,14 +6,17 @@ env:
   global:
     secure: X7vYsdnuullrVSCuHtTdO9m252YBijzqXzsaj0QIqS45vUrqafY7QS4B2/QYpEX14LN3G9/KjSO/QntY9v6xOsfH1KwhTpCRpjRataivi8uaYGK5LwL7mf3kmNeWbl4jzyUrXDcL9a2JReKlCtAGbNs73NcIMuHhXbqlJBr0Pus=
 before_install:
+- docker pull ubuntu:18.04
 - docker pull ubuntu:16.04
 - docker pull debian:9.4
 script:
-- docker build --tag svmtoolpp-ubuntu16 --build-arg 
-  TRAVIS_JOB_NUMBER=$TRAVIS_JOB_NUMBER -f ./Dockerfile-ubuntu16.04 .
-- docker build --tag svmtoolpp-debian9 --build-arg
-  TRAVIS_JOB_NUMBER=$TRAVIS_JOB_NUMBER -f ./Dockerfile-debian9.4 .
+- docker build --tag svmtoolpp-ubuntu18 -f ./Dockerfile-ubuntu18.04 .
+- docker build --tag svmtoolpp-ubuntu16 -f ./Dockerfile-ubuntu16.04 .
+- docker build --tag svmtoolpp-debian9 -f ./Dockerfile-debian9.4 .
 after_success:
+- docker run -t -d svmtoolpp-ubuntu18
+- docker cp $(docker ps -n 1 -q):/src/svmtool-cpp/build/svmtool-cpp-1.1.7-Linux.deb
+  $HOME/svmtool-cpp-1.1.7-ubuntu18.deb
 - docker run -t -d svmtoolpp-ubuntu16
 - docker cp $(docker ps -n 1 -q):/src/svmtool-cpp/build/svmtool-cpp-1.1.7-Linux.deb
   $HOME/svmtool-cpp-1.1.7-ubuntu16.deb
