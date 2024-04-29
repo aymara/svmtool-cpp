@@ -11,7 +11,6 @@ SET(svmtool_LIB_SRCS
   api.cc
   reader.cc
 )
-
 add_library(svmtool SHARED ${svmtool_LIB_SRCS})
 
 target_link_libraries(svmtool)

@@ -5,7 +5,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -43,15 +43,16 @@
  * Feature Generation
  *****************************************************************/
 
-void swindow::winPushStartWithLowerFeature(const std::string& wrd, std::stack<std::string>&pila)
+void swindow::winPushStartWithLowerFeature(const std::string& wrd,
+                                           std::stack<std::string>&pila)
 {
   int startlower=0;
 
   //Comienza por Minuscula?
-  if (erLookRegExp2(&erStartLower,wrd)) 
-    { 
+  if (erLookRegExp2(&erStartLower,wrd))
+    {
       startlower = 1;
-  
+
       std::ostringstream feat;
       feat << START_LOWER_MARK<<":"<<startlower;
 
@@ -59,12 +60,13 @@ void swindow::winPushStartWithLowerFeature(const std::string& wrd, std::stack<st
     }
 }
 
-void swindow::winPushStartWithNumberFeature(const std::string& wrd, std::stack<std::string>&pila)
+void swindow::winPushStartWithNumberFeature(const std::string& wrd,
+                                            std::stack<std::string>&pila)
 {
   int startnumber=0;
 
   //Comienza por Numero?
-  if (erLookRegExp2(&erStartNumber,wrd)) 
+  if (erLookRegExp2(&erStartNumber,wrd))
   {
     startnumber = 1;
 
@@ -76,10 +78,11 @@ void swindow::winPushStartWithNumberFeature(const std::string& wrd, std::stack<s
   }
 }
 
-void swindow::winPushSuffixFeature(const std::string& wrd, std::stack<std::string>& pila,int longitud)
+void swindow::winPushSuffixFeature(const std::string& wrd,
+                                   std::stack<std::string>& pila,int longitud)
 {
   //Obtenemos la longitud de la palabra
-   
+
   std::ostringstream feat;
   int len = wrd.size();
   std::ostringstream suf;
@@ -91,7 +94,7 @@ void swindow::winPushSuffixFeature(const std::string& wrd, std::stack<std::strin
     else suf<<"~";
 
   }
-    
+
   feat<<SUFFIX_MARK<<longitud<<":"<<suf.str();
   pila.push(feat.str());
 }
@@ -101,7 +104,9 @@ void swindow::winPushSuffixFeature(const std::string& wrd, std::stack<std::strin
  * esta funcion creara las "features" para la palabra desconocida
  * <wrd> y las apilara en en el parametro <pila>
  */
-void swindow::winPushPrefixFeature(const std::string& wrd, std::stack<std::string>& pila, int longitud)
+void swindow::winPushPrefixFeature(const std::string& wrd,
+                                   std::stack<std::string>& pila,
+                                   int longitud)
 {
   //Obtenemos la longitud de la palabra
   std::ostringstream feat;
@@ -119,12 +124,13 @@ void swindow::winPushPrefixFeature(const std::string& wrd, std::stack<std::strin
 }
 
 
-void swindow::winPushStartWithCapFeature(const std::string& wrd, std::stack<std::string>&pila)
+void swindow::winPushStartWithCapFeature(const std::string& wrd,
+                                         std::stack<std::string>&pila)
 {
   int startcap=0;
 
   //Comienza por Mayuscula?
-  if (erLookRegExp2(&erStartCap,wrd)) 
+  if (erLookRegExp2(&erStartCap,wrd))
     {
       startcap = 1;
       //mod Correcting dynamic memory errors
@@ -136,12 +142,13 @@ void swindow::winPushStartWithCapFeature(const std::string& wrd, std::stack<std:
     }
 }
 
-void swindow::winPushAllUpFeature(const std::string& wrd, std::stack<std::string>& pila)
+void swindow::winPushAllUpFeature(const std::string& wrd,
+                                  std::stack<std::string>& pila)
 {
   int allup=0;
 
   //Esta toda la palabra en mayusculas?
-  if (erLookRegExp2(&erAllUp,wrd)) 
+  if (erLookRegExp2(&erAllUp,wrd))
     {
       allup = 1;
 
@@ -154,11 +161,12 @@ void swindow::winPushAllUpFeature(const std::string& wrd, std::stack<std::string
     }
 }
 
-void swindow::winPushAllLowFeature(const std::string& wrd, std::stack<std::string>& pila)
+void swindow::winPushAllLowFeature(const std::string& wrd,
+                                   std::stack<std::string>& pila)
 {
   int alllow = 0;
   //Esta toda la palabra en minusculas?
-  if (erLookRegExp2(&erAllLow,wrd)) 
+  if (erLookRegExp2(&erAllLow,wrd))
     {
       alllow = 1;
 
@@ -171,11 +179,12 @@ void swindow::winPushAllLowFeature(const std::string& wrd, std::stack<std::strin
     }
 }
 
-void swindow::winPushContainCapFeature(const std::string& wrd, std::stack<std::string>& pila)
+void swindow::winPushContainCapFeature(const std::string& wrd,
+                                       std::stack<std::string>& pila)
 {
   int containcap = 0;
-  if (erLookRegExp2(&erContainCap,wrd)) 
-    { 
+  if (erLookRegExp2(&erContainCap,wrd))
+    {
       containcap = 1;
 
       //mod Correcting dynamic memory errors
@@ -187,10 +196,11 @@ void swindow::winPushContainCapFeature(const std::string& wrd, std::stack<std::s
     }
 }
 
-void swindow::winPushContainCapsFeature(const std::string& wrd, std::stack<std::string>& pila)
+void swindow::winPushContainCapsFeature(const std::string& wrd,
+                                        std::stack<std::string>& pila)
 {
   int containcaps = 0;
-  if (erLookRegExp2(&erContainCaps,wrd)) 
+  if (erLookRegExp2(&erContainCaps,wrd))
     {
       containcaps = 1;
 
@@ -203,11 +213,12 @@ void swindow::winPushContainCapsFeature(const std::string& wrd, std::stack<std::
     }
 }
 
-void swindow::winPushContainPeriodFeature(const std::string& wrd, std::stack<std::string>& pila)
+void swindow::winPushContainPeriodFeature(const std::string& wrd,
+                                          std::stack<std::string>& pila)
 {
   int containperiod = 0;
   //Contiene un punto?
-  if (erLookRegExp2(&erContainPeriod,wrd)) 
+  if (erLookRegExp2(&erContainPeriod,wrd))
     {
       containperiod = 1;
       std::stringstream feat;
@@ -216,11 +227,12 @@ void swindow::winPushContainPeriodFeature(const std::string& wrd, std::stack<std
     }
 }
 
-void swindow::winPushContainCommaFeature(const std::string& wrd, std::stack<std::string>& pila)
+void swindow::winPushContainCommaFeature(const std::string& wrd,
+                                         std::stack<std::string>& pila)
 {
   int containcomma = 0;
   //Contiene un punto?
-  if (erLookRegExp2(&erContainComma,wrd)) 
+  if (erLookRegExp2(&erContainComma,wrd))
     {
       containcomma = 1;
       std::ostringstream feat;
@@ -229,14 +241,15 @@ void swindow::winPushContainCommaFeature(const std::string& wrd, std::stack<std:
     }
 }
 
-void swindow::winPushContainNumFeature(const std::string& wrd, std::stack<std::string>& pila)
+void swindow::winPushContainNumFeature(const std::string& wrd,
+                                       std::stack<std::string>& pila)
 {
   int containnum = 0;
   //Contiene un numero?
-  if (erLookRegExp2(&erContainNum,wrd)) 
-    {  
+  if (erLookRegExp2(&erContainNum,wrd))
+    {
       containnum = 1;
-      
+
       std::ostringstream feat;
       //mod
       //sprintf(feat,"CN:%d",containnum);
@@ -245,11 +258,12 @@ void swindow::winPushContainNumFeature(const std::string& wrd, std::stack<std::s
     }
 }
 
-void swindow::winPushMultiwordFeature(const std::string& wrd, std::stack<std::string>& pila)
+void swindow::winPushMultiwordFeature(const std::string& wrd,
+                                      std::stack<std::string>& pila)
 {
   int multiword = 0;
   //Es una palabra multiple?
-  if (erLookRegExp2(&erMultiWord,wrd)) 
+  if (erLookRegExp2(&erMultiWord,wrd))
     {
       multiword = 1;
 
@@ -263,15 +277,18 @@ void swindow::winPushMultiwordFeature(const std::string& wrd, std::stack<std::st
     }
 }
 
-void swindow::winPushLetterFeature(const std::string& wrd, std::stack<std::string>&pila, int where, int position)
+void swindow::winPushLetterFeature(const std::string& wrd,
+                                   std::stack<std::string>&pila,
+                                   int where,
+                                   int position)
 {
   std::ostringstream feature;
-    
-  if (COUNTING_FROM_END==where) 
+
+  if (COUNTING_FROM_END==where)
     {
       feature<<CHAR_Z_MARK << position<<":"<<wrd[wrd.size()-position];
     }
-  else 
+  else
     {
       feature<<CHAR_A_MARK<<position<<":"<<wrd[position-1];
     }
@@ -279,7 +296,8 @@ void swindow::winPushLetterFeature(const std::string& wrd, std::stack<std::strin
   pila.push(feature.str());
 }
 
-void swindow::winPushLenghtFeature(const std::string& wrd, std::stack<std::string>& pila)
+void swindow::winPushLenghtFeature(const std::string& wrd,
+                                   std::stack<std::string>& pila)
 {
   //Obtenemos la longitud de la palabra
   int len = wrd.size();
@@ -318,11 +336,14 @@ void swindow::winPushSwnFeature(std::stack<std::string>& pila)
  *      direction, es la direccion en que estamos recorriendo el corpus (LEFT_TO_RIGHT
  *           o RIGHT_TO_LEFT).
  */
-void swindow::winPushAmbiguityFeature(void* ptr, dictionary* d, std::stack<std::string>& pila, int direction)
+void swindow::winPushAmbiguityFeature(void* ptr,
+                                      dictionary* d,
+                                      std::stack<std::string>& pila,
+                                      int direction)
 {
   std::ostringstream value;
-  nodo_feature_list *p = (nodo_feature_list *)ptr;
-  nodo *pn;
+    NodeFeatureList *p = (NodeFeatureList *)ptr;
+    nodo *pn;
   int *num;
   infoDict *pInfoDict;
 
@@ -330,7 +351,7 @@ void swindow::winPushAmbiguityFeature(void* ptr, dictionary* d, std::stack<std::
   num = *p->l.getIndex();
   value << p->mark << *num << ":";
   pn = get(*num, direction);
-  if (pn!=NULL)
+  if (pn!=nullptr)
   {
     dataDict* w = d->getElement(pn->wrd);
     if ((long)w!=HASH_FAIL)
@@ -367,20 +388,23 @@ void swindow::winPushAmbiguityFeature(void* ptr, dictionary* d, std::stack<std::
  *      direction, es la direccion en que estamos recorriendo el corpus (LEFT_TO_RIGHT
  *           o RIGHT_TO_LEFT).
  */
-void swindow::winPushMFTFeature(void* ptr, dictionary* d, std::stack<std::string>& pila, int direction)
+void swindow::winPushMFTFeature(void* ptr,
+                                dictionary* d,
+                                std::stack<std::string>& pila,
+                                int direction)
 {
-  std::string value;
   std::string mft;
-  nodo_feature_list *p = (nodo_feature_list *)ptr;
-  nodo *pn;
+    NodeFeatureList *p = (NodeFeatureList *)ptr;
+    nodo *pn;
   int *num,max=0;
   infoDict *pInfoDict;
 
   num = *p->l.getIndex();
-  value = p->mark;
-  value += *num + ":";
+  std::ostringstream oss;
+  oss << p->mark;
+  oss << *num << ":";
   pn = get(*num, direction);
-  if (pn!=NULL)
+  if (pn!=nullptr)
   {
     dataDict* w = d->getElement(pn->wrd);
     if ((long)w!=HASH_FAIL)
@@ -396,17 +420,17 @@ void swindow::winPushMFTFeature(void* ptr, dictionary* d, std::stack<std::string
         ret=list.next();
       }
       list.setFirst();
-      value += mft;
+      oss << mft;
     }
-    else value += "UNKNOWN"; //is unknown word
+    else oss << "UNKNOWN"; //is unknown word
   }
-  else value += EMPTY_POS;
-  
-  pila.push(value);
+  else oss << EMPTY_POS;
+
+  pila.push(oss.str());
 }
 
 
-/*
+/**
  * void winPushMaybeFeature(void *ptr, dictionary *d, std::stack *pila, int direction)
  * Genera tantos atributos "maybe" como posibles POS pueda tener la palabra, y los
  * apila en <pila>.
@@ -418,19 +442,22 @@ void swindow::winPushMFTFeature(void* ptr, dictionary* d, std::stack<std::string
  *      direction, es la direccion en que estamos recorriendo el corpus (LEFT_TO_RIGHT
  *           o RIGHT_TO_LEFT).
  */
-void swindow::winPushMaybeFeature(void* ptr, dictionary* d, std::stack<std::string>& pila, int direction)
+void swindow::winPushMaybeFeature(void* ptr,
+                                  dictionary* d,
+                                  std::stack<std::string>& pila,
+                                  int direction)
 {
   std::string value;
   std::ostringstream txt;
-  nodo_feature_list *p = (nodo_feature_list *)ptr;
-  nodo *pn;
+    NodeFeatureList *p = (NodeFeatureList *)ptr;
+    nodo *pn;
   int *num;
   infoDict *pInfoDict;
 
   num = *p->l.getIndex();
   txt << p->mark << *num << "~";
   pn = get(*num, direction);
-  if (pn!=NULL)
+  if (pn!=nullptr)
   {
     dataDict* w = d->getElement(pn->wrd);
 
@@ -464,7 +491,7 @@ void swindow::winPushMaybeFeature(void* ptr, dictionary* d, std::stack<std::stri
 }
 
 
-/*
+/**
  * void winPushPosFeature(void *ptr, dictionary *d, std::stack *pila, int direction)
  * Genera un atributo con la POS de algunos elementos de la ventana.
  * Recibe como parametros:
@@ -475,12 +502,14 @@ void swindow::winPushMaybeFeature(void* ptr, dictionary* d, std::stack<std::stri
  *      direction, es la direccion en que estamos recorriendo el corpus (LEFT_TO_RIGHT
  *           o RIGHT_TO_LEFT).
  */
-void swindow::winPushPosFeature(void* ptr, dictionary* d, std::stack<std::string>& pila, int direction)
+void swindow::winPushPosFeature(void* ptr, dictionary* d,
+                                std::stack<std::string>& pila,
+                                int direction)
 {
   std::string value;
   std::string txt;
-  nodo_feature_list *p = (nodo_feature_list *)ptr;
-  nodo *pn;
+    NodeFeatureList *p = (NodeFeatureList *)ptr;
+    nodo *pn;
   infoDict *pInfoDict;
   std::stringstream feature;
 
@@ -490,7 +519,7 @@ void swindow::winPushPosFeature(void* ptr, dictionary* d, std::stack<std::string
   while (!end)
   {
     num = *p->l.getIndex();
-    
+
     if (feature.rdbuf()->in_avail() == 0) {
       feature << p->mark << *num;
     } else {
@@ -499,7 +528,7 @@ void swindow::winPushPosFeature(void* ptr, dictionary* d, std::stack<std::string
 
     pn = get(*num, direction);
 
-    if (pn==NULL) txt = EMPTY_POS;
+    if (pn==nullptr) txt = EMPTY_POS;
     else if ( (pn->pos == EMPTY) || (*num==0) )  //AKI3
     {
 
@@ -549,18 +578,21 @@ void swindow::winPushPosFeature(void* ptr, dictionary* d, std::stack<std::string
  *      direction, es la direccion en que estamos recorriendo el corpus (LEFT_TO_RIGHT
  *           o RIGHT_TO_LEFT).
  */
-void swindow::winPushWordFeature(void* ptr, dictionary* /*d*/, std::stack<std::string>& pila, int direction)
+void swindow::winPushWordFeature(void* ptr,
+                                 dictionary* /*d*/,
+                                 std::stack<std::string>& pila,
+                                 int direction)
 {
   std::string value;
   std::ostringstream name;
   std::string txt;
-  nodo_feature_list *p = (nodo_feature_list *)ptr;
-  nodo *pn=NULL;
+    NodeFeatureList *p = (NodeFeatureList *)ptr;
+    nodo *pn=nullptr;
 
   int *num = *p->l.getIndex();
   pn = get(*num, direction);
 
-  if (pn==NULL) value = EMPTY_WORD;
+  if (pn==nullptr) value = EMPTY_WORD;
   else value = pn->wrd;
   name << std::string(p->mark) << *num;
 
@@ -571,7 +603,7 @@ void swindow::winPushWordFeature(void* ptr, dictionary* /*d*/, std::stack<std::s
 
     pn = get(*num, direction);
 
-    if (pn==NULL) txt = EMPTY_WORD;
+    if (pn==nullptr) txt = EMPTY_WORD;
     else txt  = pn->wrd;
     value += "~" + txt;
   }
@@ -626,7 +658,7 @@ void swindow::deleteList()
 
 void swindow::init(dictionary* dic)
 {
-  if(m_output != NULL)
+  if(m_output != nullptr)
     iniGeneric(dic);
 }
 
@@ -634,7 +666,7 @@ int swindow::iniGeneric(dictionary* dic)
 {
   posBegin = posIndex;
   posEnd = posIndex;
-  
+
   int ret = iniList(dic);
   endWin = last;
   if (ret>=0) readSentence(dic);
@@ -681,7 +713,7 @@ int swindow::iniList(dictionary* dic)
    *   - -3 end of file
    */
   if (ret>=0) ret=j-posIndex-1;
-	
+
   return ret;
 }
 
@@ -705,8 +737,9 @@ int swindow::readInput(dictionary* dic) {
   std::set<std::string> tagset;
 
   int ret;
-  while((ret = m_reader.parseWord(word, tagset, comment)) == 1);
-  nodo* node = m_reader.buildNode(word, comment);
+  while((ret = m_reader.parseWord(word, tagset, comment)) == 1)
+    ;
+    nodo* node = m_reader.buildNode(word, comment);
 
   // only add node if not end of file
   if (ret != -3) {
@@ -747,7 +780,9 @@ swindow::~swindow()
 //   deleteList();
 }
 
-swindow::swindow(istream& in, std::ostream* output, dictionary* dic) : m_output(output), m_reader(in),
+swindow::swindow(istream& in,
+                 std::ostream* output,
+                 dictionary* dic) : m_output(output), m_reader(in),
 first(0), last(0), numObj(0),index(0),beginWin(0),endWin(0),posBegin(0),posEnd(0)
 {
   lengthWin = 7;
@@ -756,7 +791,8 @@ first(0), last(0), numObj(0),index(0),beginWin(0),endWin(0),posBegin(0),posEnd(0
   init(dic);
 }
 
-swindow::swindow(int lengthWin, dictionary *dic): m_output(NULL), m_reader(),
+swindow::swindow(int lengthWin,
+                 dictionary *dic): m_output(nullptr), m_reader(),
 first(0), last(0), numObj(0), beginWin(0), endWin(0), posBegin(0), posEnd(lengthWin)
 {
   this->lengthWin = lengthWin;
@@ -764,10 +800,14 @@ first(0), last(0), numObj(0), beginWin(0), endWin(0), posBegin(0), posEnd(length
   init(dic);
 }
 
-swindow::swindow(istream& in, int number, int position, std::ostream* output, dictionary* dic) : m_output(output), m_reader(in),
+swindow::swindow(istream& in,
+                 int number,
+                 int position,
+                 std::ostream* output,
+                 dictionary* dic) : m_output(output), m_reader(in),
 first(0), last(0), numObj(0),index(0),beginWin(0),endWin(0),posBegin(0),posEnd(0)
 {
-  
+
   if ((number<3) || (number<=position))
     { fprintf(stderr,"\nWindow Length can not be first or last element.\nLength should be greater than \"Interest Point Position\" or 3.\n");
     exit(0);
@@ -779,13 +819,16 @@ first(0), last(0), numObj(0),index(0),beginWin(0),endWin(0),posBegin(0),posEnd(0
   init(dic);
 }
 
-swindow::swindow(istream& in, int number, std::ostream* output, dictionary* dic) : m_output(output), m_reader(in), 
+swindow::swindow(istream& in,
+                 int number,
+                 std::ostream* output,
+                 dictionary* dic) : m_output(output), m_reader(in),
 first(0), last(0), numObj(0),index(0),beginWin(0),endWin(0),posBegin(0),posEnd(0)
 {
 
   lengthWin = number;
   posIndex = number/2;
-     
+
   init(dic);
 }
 
@@ -815,9 +858,9 @@ bool swindow::next()
 /* Move Interest Point to previous element */
 bool swindow::previous()
 {
-  if ((index==NULL) || (index->previous==NULL)) return false;
+  if ((index==nullptr) || (index->previous==nullptr)) return false;
 
-  if  ((posBegin==0) && (beginWin->previous!=NULL)) beginWin = beginWin->previous;
+  if  ((posBegin==0) && (beginWin->previous!=nullptr)) beginWin = beginWin->previous;
   else if  (posIndex>posBegin) posBegin++;
 
   if  (posEnd<lengthWin-1) posEnd++;
@@ -842,7 +885,7 @@ nodo *swindow::get(int position, int direction)
   if (direction==2) position = -position;
   if ( ((position<0) && (posIndex+position+1<posBegin))
        || ((position>0) && (posIndex+position>posEnd)) )
-    return NULL;
+    return nullptr;
 
   if(!user_window.empty())
     return get_user(position);
@@ -858,7 +901,7 @@ nodo *swindow::get_user(int position)
 
 nodo *swindow::get_intern(int position)
 {
-  nodo *aux=index;
+    nodo *aux=index;
   int i=0;
 
   if (position == 0) return index;
@@ -867,13 +910,13 @@ nodo *swindow::get_intern(int position)
   {
     if (position>0)
     { i++;
-      if (aux->next != NULL) aux = aux->next;
-      else 	return NULL;
+      if (aux->next != nullptr) aux = aux->next;
+      else   return nullptr;
     }
     else
     { i--;
-      if (aux->previous != NULL) aux = aux->previous;
-      else return NULL;
+      if (aux->previous != nullptr) aux = aux->previous;
+      else return nullptr;
     }
   }
 
@@ -887,11 +930,11 @@ int swindow::show(int showScoresFlag, int showComments)
 {
   std::string wrd;
 
-  if (first==NULL) return 0;
+  if (first==nullptr) return 0;
 
-  nodo *actual = first;
+    nodo *actual = first;
 
-  while(actual != NULL) {
+  while(actual != nullptr) {
     // special treatment for empty tokens that separate sentences
     if (actual->wrd.empty()) {
       *m_output << std::endl;
@@ -942,19 +985,19 @@ void swindow::putIndex(int i)
  */
 int swindow::winMaterializePOSValues(int action)
 {
-  if (first==NULL) return 0;
+  if (first==nullptr) return 0;
 
   int inicio=1;
   weight_node_t *w,max;
-  nodo *actual=first;
+    nodo *actual=first;
 
-  while (actual!=NULL)
+  while (actual!=nullptr)
     {
 
       switch (action)
-	{
-	case 0: //PUT MAX
-	  inicio = 1;
+  {
+  case 0: //PUT MAX
+    inicio = 1;
     while(!actual->stackScores.empty())
     {
       w = actual->stackScores.top();
@@ -968,21 +1011,21 @@ int swindow::winMaterializePOSValues(int action)
       }
       delete w;
     }
-	  actual->weight=max.data;
-	  actual->pos = max.pos;
-	  //Added for 2 laps tagging
-	  actual->weightOld=max.data;
-	  actual->posOld = max.pos;
-	  break;
-	case 1: //RESET VALUES
-	  actual->pos = "";
-	  actual->weight=0;
-	  break;
-	case 2: //PUT OLD
-	  actual->pos = actual->posOld;
-	  actual->weight=actual->weightOld;
-	  break;
-	}
+    actual->weight=max.data;
+    actual->pos = max.pos;
+    //Added for 2 laps tagging
+    actual->weightOld=max.data;
+    actual->posOld = max.pos;
+    break;
+  case 1: //RESET VALUES
+    actual->pos = "";
+    actual->weight=0;
+    break;
+  case 2: //PUT OLD
+    actual->pos = actual->posOld;
+    actual->weight=actual->weightOld;
+    break;
+  }
       actual=actual->next;
     }
   return 0;
@@ -990,44 +1033,32 @@ int swindow::winMaterializePOSValues(int action)
 
 /****************************************************************************/
 
-/*
- * int winExistUnkWord(int direction, dictionary *d)
- * Esta funcion comprueba si hay parabras desconocidas.
- * En caso de que el parametro direction sea:
- *   LEFT_TO_RIGHT - mira si hay desconocidas a la
- *                   derecha del punto de interes de la ventana.
- *   RIGHT_TO_LEFT - mira si hay desconocidas a la izquierda
- *                   del punto de interes de la ventana.
- * Esta funcion devuelve:
- *   un entero >=0, si no hay desconocidas
- *              -1, si hay desconocidas
- */
 int swindow::winExistUnkWord(int direction, dictionary *d)
 {
-  nodo *aux=index;
+    nodo *aux=index;
   int ret=0,i=posIndex;
 
-  if (index==NULL) return 1;
+  if (index==nullptr) return 1;
   aux = index;
 
   while (ret>=0)
-    {
+  {
       switch (direction)
-	{
-	case LEFT_TO_RIGHT:
-	  if (aux->next==NULL || aux==endWin) ret=-1;
-	  else aux = aux->next;
-	  if ((long)d->getElement(aux->wrd)==HASH_FAIL)	return -1;
-	  i++;
-	  break;
-	case RIGHT_TO_LEFT:
-	  if (aux->previous==NULL || aux==beginWin) ret=-1;
-	  else aux = aux->previous;
-	  if ((long)d->getElement(aux->wrd)==HASH_FAIL) return -1;
-	  i--;
-	  break;
-	}
+    {
+    case LEFT_TO_RIGHT:
+      if (aux->next==nullptr || aux==endWin) ret=-1;
+      else aux = aux->next;
+      if ((long)d->getElement(aux->wrd)==HASH_FAIL)  return -1;
+      i++;
+      break;
+    case RIGHT_TO_LEFT:
+      if (aux->previous==nullptr || aux==beginWin) ret=-1;
+      else aux = aux->previous;
+      if ((long)d->getElement(aux->wrd)==HASH_FAIL) return -1;
+      i--;
+      break;
     }
+  }
   return 0;
 }
 

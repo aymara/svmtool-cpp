@@ -5,7 +5,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string>
+#include <sstream>
 #ifdef _WIN32
 #include <io.h>
 #else
@@ -33,7 +35,7 @@ using namespace std;
 
 /*
  * FILE *openFile(char *name, char mode[])
- * Abre un fichero con el nombre <name> y en el modo <mode> 
+ * Abre un fichero con el nombre <name> y en el modo <mode>
  * (r lectura, w escritura, a actualización ...).
  * Devuelve el puntero al fichero
  * En caso de no poder abrir un fichero, termina la ejecucion
@@ -51,26 +53,33 @@ FILE *openFile(const std::string &name, const char mode[])
 
 /**************************************************/
 
-void generateFileName(const std::string& name, const std::string& added, int numModel, int direction, int what, const std::string& type, std::string& out)
+void generateFileName(const std::string& name,
+                      const std::string& added,
+                      int numModel, int direction,
+                      int what, const
+                      std::string& type,
+                      std::string& out)
 {
-	out = name;
+  std::ostringstream oss(name);
   if (!added.empty())
-  { 
-    out += ".";
+  {
+    oss << ".";
     for (std::string::size_type i=0; i<added.size(); i++)
     {
-      if (added[i]==':') out += "DOSPUNTS";
-      else if (added[i]=='`')  out += "COMETA2";
-      else if (added[i]=='\'') out += "COMETA";
-      else out += added[i];
-
+      if (added[i]==':') oss << "DOSPUNTS";
+      else if (added[i]=='`')  oss << "COMETA2";
+      else if (added[i]=='\'') oss << "COMETA";
+      else oss << added[i];
     }
-	}
-	if (what==UNKNOWN) 	out += ".UNK";
-	if (numModel>=0) out += ".M" + numModel;
-	if (direction==LEFT_TO_RIGHT) out += ".LR";
-	else if (direction==RIGHT_TO_LEFT) out += ".RL";
-	if (!type.empty()) out += "." + type;
+  }
+  if (what==UNKNOWN) oss << ".UNK";
+  if (numModel>=0) oss << ".M" << numModel;
+  if (direction==LEFT_TO_RIGHT)
+    oss << ".LR";
+  else if
+    (direction==RIGHT_TO_LEFT) oss << ".RL";
+  if (!type.empty()) oss << "." + type;
+  out = oss.str();
 }
 
 /**************************************************/
@@ -92,11 +101,11 @@ void showProcessDone(int num, int freq, int isEnd, const std::string& what)
 
 /**************************************************/
 
-/* 
- * int goToWord(FILE *f, int offset) 
+/*
+ * int goToWord(FILE *f, int offset)
  * Lee <offset> lineas del canal o fichero <f>
  * Retorna -1 si encuentra eof
- * retorna el numero de lineas leidas si todo va bien         
+ * retorna el numero de lineas leidas si todo va bien
  */
 int goToWord(FILE *f, int offset)
 {
@@ -106,7 +115,7 @@ int goToWord(FILE *f, int offset)
 	{
 	   if (fgetc(f)=='\n') cont++;
 	}
-	
+
 	if (feof(f)) return -1;
 	return cont;
 }
@@ -117,7 +126,7 @@ int goToWord(FILE *f, int offset)
  * int readString(FILE *f, char *out)
  * Lee un String entre espacios o espacios y fines de linea
  *    FILE *f - es fichero o canal de donde leeremos el String
- *    char *out - es un parametro de salida, contendra el 
+ *    char *out - es un parametro de salida, contendra el
  *                String que leeremos
  * Retorna -1 si encuentra eof
  * retorna  0 si todo va bien
@@ -125,19 +134,19 @@ int goToWord(FILE *f, int offset)
 int readString(FILE *f, std::string &out)
 {
   if (feof(f)) return -1;
-  
+
   char c = fgetc(f);
   out = "";
-  
+
   while (!feof(f) && c==' ' && c=='\n') c=fgetc(f);
-  
+
   while (!feof(f) && c!=' ' && c!='\n')
-   { 
+   {
      out += c;
      c=fgetc(f);
    }
    if (feof(f) && out.empty()) return -1;
-   return 0;	
+   return 0;
 }
 
 /**************************************************/
@@ -147,7 +156,7 @@ int readString(FILE *f, std::string &out)
  * Lee un del canal o fichero <f>, el String leido sera devuelto como el
  * parametro de salida <out>. Para leer el String se leera hasta encontrar
  * el <endChar> o el caracter <endLine>
- * Retorna 0 si encuentra <endLine> 
+ * Retorna 0 si encuentra <endLine>
  * retorna -1 si eof
  * retorn 1 si todo va bien y encuentra <endChar>
  */
@@ -156,13 +165,13 @@ int readTo(FILE *f, char endChar, char endLine, std::string &out)
   out = "";
   char c = endChar+1;
   while (!feof(f) && c!=endChar && (endLine==0 || c!=endLine))
-    { 
-      c=fgetc(f);      
+    {
+      c=fgetc(f);
       if (c!=endChar && c!=endLine) out += c;
     }
   if (feof(f)) return -1;
   if (c==endLine) return 0;
-  return 1;  
+  return 1;
 }
 
 /*******************************************************/
@@ -199,7 +208,7 @@ void qsort(int a[], int lo, int hi) {
 /**************************************************/
 
 void showTime(const std::string& what, double real, double utime, double stime)
-{ 
+{
 //   char message[200]="";
   std::cerr << what << ": [ Real Time = %5.3lf "<< real << " secs.( %5.3lf "<<utime<<" usr + %5.3lf "<< stime << " sys = %5.3lf " << utime+stime << " CPU Time) ]"<< std::endl;
 }
@@ -219,7 +228,7 @@ int buscarMenorEnString(const char *szIn,char *szMenor,int *iMenor)
   strcpy(szTemp,szIn);
   if (*iMenor==-1)
       sscanf(szIn,"%s%d",szMenor,iMenor);
-  else 
+  else
   {
     sscanf(szIn,"%s%d",szString,&iString);
     if (strcmp(szString,szMenor)<0)
@@ -279,11 +288,11 @@ int ordenarStringPorParejas(const char *szIn, char *szOut, int depth, char *szIn
 /**************************************************/
 
 int obtainMark(FILE *channel,std::string& mark)
-{  
+{
     int ret;
     mark = "";
     while (mark.empty()) ret = readTo(channel,'(','\n',mark);
- 
+
     return ret;
 }
 
@@ -291,26 +300,26 @@ int obtainMark(FILE *channel,std::string& mark)
 
 int obtainAtrInt(FILE *channel,int *endAtr)
 {
-    int i=0;
-    char c=' ',num[5]="";
+  int i=0;
+  char c=' ',num[5]="";
 
-    while ( (!feof(channel)) && (c!='(') && (c!=',') && (c!=')') )
-    {
-	c=fgetc(channel);
-	if ((c!='(') && (c!=')')) num[i]=c;
-	i++;
-    }
-    if (c==')') *endAtr=1;
-    num[i]='\0';
-    return atoi(num);
+  while ( (!feof(channel)) && (c!='(') && (c!=',') && (c!=')') )
+  {
+    c=fgetc(channel);
+    if ((c!='(') && (c!=')')) num[i]=c;
+    i++;
+  }
+  if (c==')') *endAtr=1;
+  num[i]='\0';
+  return atoi(num);
 }
 
 /**************************************************/
 
 
-void destroyFeatureList(simpleList<nodo_feature_list*> *fl)
+void destroyFeatureList(simpleList<NodeFeatureList*> *fl)
 {
-  nodo_feature_list *data = 0;
+    NodeFeatureList *data = 0;
 
   fl->setFirst();
   for(int i = 0; i < fl->numElements(); i++, fl->next()) {
@@ -325,13 +334,13 @@ void destroyFeatureList(simpleList<nodo_feature_list*> *fl)
 
 /**************************************************/
 
-void createFeatureList(const std::string &name,simpleList<nodo_feature_list*> *featureList)
+void createFeatureList(const std::string &name,simpleList<NodeFeatureList*> *featureList)
 {
    int *i,endAtr;
 //    char c;
    int ret = 1;
    //char temp[100];
-   nodo_feature_list *data;
+    NodeFeatureList *data;
 
    FILE *f;
     if ((f = fopen(name.c_str(), "rt"))== NULL)
@@ -341,7 +350,7 @@ void createFeatureList(const std::string &name,simpleList<nodo_feature_list*> *f
     }
 
     //Insert feature Swn
-    data = new nodo_feature_list; 
+    data = new NodeFeatureList;
     data->mark = "Swn";
     featureList->add(data);
 
@@ -349,7 +358,7 @@ void createFeatureList(const std::string &name,simpleList<nodo_feature_list*> *f
     ret = obtainMark(f,temp);
     while (ret!=-1)
     {
-      data = new nodo_feature_list;
+      data = new NodeFeatureList;
       data->mark = temp;
 
       endAtr=0;
@@ -364,7 +373,7 @@ void createFeatureList(const std::string &name,simpleList<nodo_feature_list*> *f
       temp.clear();
       ret = obtainMark(f,temp);
     }
-    fclose(f);      
+    fclose(f);
 
 }
 
@@ -375,7 +384,7 @@ void removeFiles(const std::string &path, int type,int numModel, int direction, 
   char szRemove[200];
   switch (type)
     {
-      case RM_TEMP_FILES: 
+      case RM_TEMP_FILES:
 	if (verbose==TRUE) fprintf(stderr,"\nErasing temporal files.");
 	/*
 	sprintf(remove,"rm -f %s.M%d*.SVM",path,numModel);
@@ -411,7 +420,7 @@ void removeFiles(const std::string &path, int type,int numModel, int direction, 
 	  }
         if (direction==RIGHT_TO_LEFT || direction==LR_AND_RL)
 	  {
-	    if (verbose==TRUE) 
+	    if (verbose==TRUE)
 	      fprintf(stderr,"\nErasing old files for MODEL %d in RIGHT TO LEFT sense.",numModel);
 	    //sprintf(szRemove,"rm -f %s*M%d.RL.*",path,numModel);
 	    //system(szRemove);

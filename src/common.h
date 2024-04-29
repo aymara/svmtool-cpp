@@ -46,9 +46,9 @@ using namespace std;
 #define RM_MODEL_FILES 1001
 #define RM_TEMP_FILES  1002
 
-struct nodo_feature_list
+struct NodeFeatureList
 {
-  nodo_feature_list() :
+    NodeFeatureList() :
       mark(),
       l()
   {
@@ -78,8 +78,8 @@ void qsort(int a[], int lo, int hi);
 
 int ordenarStringPorParejas(const char* szIn, char* szOut, int depth, char* szInicial);
 
-void destroyFeatureList(simpleList<nodo_feature_list*> *);
-void createFeatureList(const std::string& name,simpleList<nodo_feature_list*> *featureList);
+void destroyFeatureList(simpleList<NodeFeatureList*> *);
+void createFeatureList(const std::string& name,simpleList<NodeFeatureList*> *featureList);
 void removeFiles(const std::string& path, int type,int numModel, int direction, int verbose);
 void Tokenize(const string& str, vector<string>& tokens, const string& delimiters);
 

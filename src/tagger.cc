@@ -5,7 +5,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -63,7 +63,7 @@ hash_t<weight_node_t*> *tagger::taggerCreateBiasHash(const std::string& name)
 
   bias->hash_init(40);
 
-  if ((f = fopen(name.c_str(), "rt"))== NULL)
+  if ((f = fopen(name.c_str(), "rt"))== nullptr)
   {
     std::cerr << "Error opening file: "<<name<<std::endl;
     exit(0);
@@ -123,7 +123,7 @@ void tagger::taggerLoadModels(models_t *model, int taggerNumModel)
 {
   std::string flow2,flow1;
   std::ostringstream name;
-  
+
   //Cargamos la lista de "features" para palabras conocidas
   name << taggerModelName << ".A" << taggerNumModel;
   if (verbose)  std::cerr << std::endl << "Loading FEATURES FOR KNOWN WORDS from < "<<name.str()<<" >"<< std::endl;
@@ -145,12 +145,12 @@ void tagger::taggerLoadModels(models_t *model, int taggerNumModel)
     name.str("");
     name << taggerModelName << ".M"<<taggerNumModel<<"."<<flow2<<".MRG";
     if (verbose) std::cerr<<"-. Loading MERGED MODEL FOR KNOWN WORDS from < "<<name.str()<<" >"<< std::endl;
-    model->wr2 = new weightRepository(name.str(),taggerKFilter);
+    model->wr2 = new WeightRepository(name.str(),taggerKFilter);
 
     name.str("");
     name << taggerModelName << ".UNK.M"<<taggerNumModel<<"."<<flow2<<".MRG";
     if (verbose) std::cerr <<"-. Loading MERGED MODEL FOR UNKKNOWN WORDS from < "<<name.str()<<" >"<<std::endl<<std::endl;
-    model->wrUnk2 = new weightRepository(name.str(),taggerUFilter);
+    model->wrUnk2 = new WeightRepository(name.str(),taggerUFilter);
   }
   else flow1 =flow;
 
@@ -163,12 +163,12 @@ void tagger::taggerLoadModels(models_t *model, int taggerNumModel)
   name.str("");
   name << taggerModelName << ".M"<<taggerNumModel<<"."<<flow1<<".MRG";
   if (verbose) std::cerr<<"-. Loading MERGED MODEL FOR KNOWN WORDS from < "<<name.str()<<" >"<<std::endl;
-  model->wr = new weightRepository(name.str(),taggerKFilter);
+  model->wr = new WeightRepository(name.str(),taggerKFilter);
 
   name.str("");
   name << taggerModelName << ".UNK.M"<<taggerNumModel<<"."<<flow1<<".MRG";
   if (verbose) std::cerr<<"-. Loading MERGED MODEL FOR UNKNOWN WORDS from < "<<name.str()<<" >"<<std::endl;
-  model->wrUnk = new weightRepository(name.str(),taggerUFilter);
+  model->wrUnk = new WeightRepository(name.str(),taggerUFilter);
 
 }
 
@@ -179,7 +179,7 @@ void tagger::taggerLoadModelsForTagging()
 #ifndef WIN32
   startUpTime = times(&tbuffStartUp);
 #endif
-  
+
   int modelsNeeded=1;
 
   std::string name = taggerModelName + ".DICT";
@@ -197,34 +197,34 @@ void tagger::taggerLoadModelsForTagging()
   name = taggerModelName + ".UNKP";
   if (verbose) std::cerr << "Loading UNKNOWN WORDS POS from < "<<name<<" >"<<std::endl;
 
-  if ( taggerStrategy == STRA_2P_RELABELING //modstrat 1 
+  if ( taggerStrategy == STRA_2P_RELABELING //modstrat 1
        || taggerStrategy == STRA_1P_ROBUST_UNK /*modstrat 4*/ )  modelsNeeded = 2;
 
   taggerModelList = new models_t[modelsNeeded];
   taggerModelRunning = &taggerModelList[0];
 
-  if (taggerStrategy == STRA_1P_DEFAULT ) //modstrat 0)  
+  if (taggerStrategy == STRA_1P_DEFAULT ) //modstrat 0)
     taggerLoadModels(taggerModelRunning,0);
-  else if (taggerStrategy == STRA_1P_UNSUPERVISED ) //modstrat 2)  
+  else if (taggerStrategy == STRA_1P_UNSUPERVISED ) //modstrat 2)
     taggerLoadModels(taggerModelRunning,3);
   else if (taggerStrategy ==  STRA_1P_ROBUST_UNK ) //modstrat 4)
-    { 
-        taggerLoadModels(taggerModelRunning,0);
-        taggerLoadModels(&taggerModelList[1],2);
-    }
-  else if (taggerStrategy == STRA_1P_VERY_ROBUST_UNK ) //modstrat 5)  
+  {
+    taggerLoadModels(taggerModelRunning,0);
+    taggerLoadModels(&taggerModelList[1],2);
+  }
+  else if (taggerStrategy == STRA_1P_VERY_ROBUST_UNK ) //modstrat 5)
     taggerLoadModels(taggerModelRunning,4);
-     else  if (taggerStrategy == STRA_2P_RELABELING )//modstrat 1)
-    { 
-        taggerLoadModels(taggerModelRunning,2);
-        taggerLoadModels(&taggerModelList[1],1);
-        taggerNumLaps = 2;
-    }
+  else  if (taggerStrategy == STRA_2P_RELABELING )//modstrat 1)
+  {
+    taggerLoadModels(taggerModelRunning,2);
+    taggerLoadModels(&taggerModelList[1],1);
+    taggerNumLaps = 2;
+  }
   else
-    {  
-      std::cerr<<"Execution error: Strategy "<<taggerStrategy<<" doesn't exist!!"<<std::endl<<std::endl;
-      exit(0);
-    }
+  {
+    std::cerr<<"Execution error: Strategy "<<taggerStrategy<<" doesn't exist!!"<<std::endl<<std::endl;
+    exit(0);
+  }
 
   endStartUpTime = times(&tbuffEndStartUp);
 }
@@ -235,12 +235,12 @@ void tagger::taggerInit(std::istream& input, std::ostream& output)
   std::string name;
 
   if (sw != 0) delete sw;
-  //Mirar si existe fichero .WIN  
+  //Mirar si existe fichero .WIN
   if (taggerWinIndex==-1 && taggerWinLength==-1)
   {
     name = taggerModelName + ".WIN";
     FILE *f =  fopen (name.c_str(),"r");
-    if ( f == NULL ) sw = new swindow(input, &output, d);
+    if ( f == nullptr ) sw = new swindow(input, &output, d);
     else
     {
       fscanf(f,"%d %d",&taggerWinLength,&taggerWinIndex);
@@ -254,7 +254,7 @@ void tagger::taggerInit(std::istream& input, std::ostream& output)
 
 void tagger::taggerInit()
 {
-  if (sw != NULL) delete sw;
+  if (sw != nullptr) delete sw;
   sw = new swindow(5, d);
 }
 
@@ -264,7 +264,7 @@ tagger::~tagger()
 {
   int modelsNeeded=1;
 
-  if (taggerStrategy == STRA_2P_RELABELING ) //modstrat 1)  
+  if (taggerStrategy == STRA_2P_RELABELING ) //modstrat 1)
     modelsNeeded = 2;
 
   delete d;
@@ -292,14 +292,14 @@ tagger::~tagger()
 
 
 void tagger::taggerShowComments()
-{ 
+{
   taggerShowCommentsFlag = true;
 }
 
 /***************************************************************/
 
 void tagger::taggerShowNoComments()
-{ 
+{
   taggerShowCommentsFlag = false;
 }
 
@@ -308,14 +308,14 @@ void tagger::taggerShowNoComments()
 
 
 void tagger::taggerActiveShowScoresFlag()
-{ 
+{
   taggerShowScoresFlag = true;
 }
 
 /***************************************************************/
 
 void tagger::taggerDesactiveShowScoresFlag()
-{ 
+{
   this->taggerShowScoresFlag = false;
 }
 
@@ -377,26 +377,29 @@ int tagger::taggerRightSenseSpecialForUnknown()
 {
   int cont=1;
 
-  while(sw->previous());
-  nodo *elem = sw->getIndex();
+  while(sw->previous())
+    ;
+    nodo *elem = sw->getIndex();
 
   if (sw->winExistUnkWord(1,d)==-1)
     taggerModelRunning=&taggerModelList[1];
-  else taggerModelRunning=&taggerModelList[0];
+  else
+    taggerModelRunning=&taggerModelList[0];
 
   taggerGenerateScore(elem,1);
 
   while(sw->next())
-    {
-      elem = sw->getIndex();
+  {
+    elem = sw->getIndex();
 
-      if (sw->winExistUnkWord(1,d)==-1)
-  taggerModelRunning=&taggerModelList[1];
-      else taggerModelRunning=&taggerModelList[0];
+    if (sw->winExistUnkWord(1,d)==-1)
+      taggerModelRunning=&taggerModelList[1];
+    else
+      taggerModelRunning=&taggerModelList[0];
 
-      taggerGenerateScore(elem,1);
-      cont++;
-    }
+    taggerGenerateScore(elem,1);
+    cont++;
+  }
 
   if (flow == "LRL") sw->winMaterializePOSValues(1);
 
@@ -408,8 +411,9 @@ int tagger::taggerRightSenseSpecialForUnknown()
 int tagger::taggerLeftSenseSpecialForUnknown()
 {
   int cont=1;
-  while(sw->next());
-  nodo *elem = sw->getIndex();
+  while(sw->next())
+    ;
+    nodo *elem = sw->getIndex();
   if (sw->winExistUnkWord(2,d)==-1)
     taggerModelRunning=&taggerModelList[1];
   else taggerModelRunning=&taggerModelList[0];
@@ -439,7 +443,7 @@ int tagger::taggerRightSense()
   int cont=1;
 
   while(sw->previous());
-  nodo *elem = sw->getIndex();
+    nodo *elem = sw->getIndex();
   if (elem == 0)
   {
     std::cerr << "tagger::taggerRightSense: ERROR index null at beginning" << std::endl;
@@ -465,7 +469,7 @@ int tagger::taggerLeftSense()
 {
   int cont=1;
   while(sw->next());
-  nodo *elem = sw->getIndex();
+    nodo *elem = sw->getIndex();
   taggerGenerateScore(elem,2);
 
   while(sw->previous())
@@ -490,7 +494,7 @@ void tagger::taggerRun()
   clock_t start,end;
   start = times(&tbuff1);
 #endif
-  
+
   switch(taggerStrategy)
   {
     case STRA_1P_DEFAULT/*modstrat 0*/: taggerDoNormal(&contWords,&contSentences); break;
@@ -509,7 +513,7 @@ void tagger::taggerRun()
 
     std::cerr<<"* -------------------------------------------------------------------"<<std::endl;
     showTime("Start Up Time",
-       ((double)(endStartUpTime-startUpTime))/CLOCKS_PER_SECOND, 
+       ((double)(endStartUpTime-startUpTime))/CLOCKS_PER_SECOND,
        ((double)tbuffEndStartUp.tms_utime-(double)tbuffStartUp.tms_utime)/CLOCKS_PER_SECOND,
        ((double)tbuffEndStartUp.tms_stime-(double)tbuffStartUp.tms_stime)/CLOCKS_PER_SECOND);
     std::cerr<<"* -------------------------------------------------------------------"<<std::endl;
@@ -520,7 +524,7 @@ void tagger::taggerRun()
        ((double)tbuff2.tms_stime-(double)tbuff1.tms_stime)/CLOCKS_PER_SECOND - sysFexTime -sysSVMTime);
     std::cerr<<"* -------------------------------------------------------------------"<<std::endl;
     std::cerr<<"[ Tagging Time = Feature Extraction Time + SVM Time + Process Time ]"<<std::endl;
-    showTime("Tagging Time",((double)(end-start))/CLOCKS_PER_SECOND, 
+    showTime("Tagging Time",((double)(end-start))/CLOCKS_PER_SECOND,
        ((double)tbuff2.tms_utime-(double)tbuff1.tms_utime)/CLOCKS_PER_SECOND,
        ((double)tbuff2.tms_stime-(double)tbuff1.tms_stime)/CLOCKS_PER_SECOND);
     std::cerr<<"* -------------------------------------------------------------------"<<std::endl;
@@ -532,7 +536,7 @@ void tagger::taggerRun()
         (double)tbuffEndStartUp.tms_stime-(double)tbuffStartUp.tms_stime)/CLOCKS_PER_SECOND);
         std::cerr<<"* -------------------------------------------------------------------"<<std::endl;
     taggerStadistics(contWords,contSentences,
-         ((double)(end-start))/CLOCKS_PER_SECOND, 
+         ((double)(end-start))/CLOCKS_PER_SECOND,
          ((double)tbuff2.tms_utime-(double)tbuff1.tms_utime)/CLOCKS_PER_SECOND,
          ((double)tbuff2.tms_stime-(double)tbuff1.tms_stime)/CLOCKS_PER_SECOND);
     }
@@ -620,10 +624,11 @@ void tagger::taggerDoNTimes(int *numWords, int *numSentences,int laps)
 
 /***************************************************************/
 
-void tagger::taggerGenerateScore(nodo *elem,int direction)
+void tagger::taggerGenerateScore(nodo *elem, int direction)
 {
   // no tag for empty lines
-  if (elem->wrd.empty()) {
+  if (elem->wrd.empty())
+  {
     return;
   }
 
@@ -633,23 +638,26 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
   struct  tms tbuffStartSVM,tbuffEndSVM;
   clock_t startSVMTime,endSVMTime;
 #endif
-  
+
   std::vector<weight_node_t> weight;
-  weightRepository *weightRep;
-  unsigned int numMaybe;
-  int max=0;
-  int is_unk=FALSE;
-  simpleList<nodo_feature_list*> *featureList;
+  WeightRepository* weightRep;
+  unsigned int numMaybe = 0;
+  int max = 0;
+  int is_unk = false;
+  simpleList<NodeFeatureList*>* featureList;
 
   startFexTime = times(&tbuffStartFex);
 
   dataDict* i = d->getElement(elem->wrd);
-  if (!userWeight.empty()) {
+  if (!userWeight.empty())
+  {
     weight = userWeight;
     featureList = &taggerModelRunning->featureList;
     weightRep = taggerModelRunning->wr;
     numMaybe = weight.size();
-  } else if ((long)i!=HASH_FAIL) {
+  }
+  else if ((long)i != HASH_FAIL)
+  {
     featureList = &taggerModelRunning->featureList;
     numMaybe = d->getElementNumMaybe(i);
     weight = taggerCreateWeightNodeArray(numMaybe,i);
@@ -668,7 +676,7 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
   {
     featureList = &taggerModelRunning->featureListUnk;
     weight = taggerCreateWeightUnkArray(&numMaybe);
-    is_unk = TRUE;
+    is_unk = true;
 
     if (flow =="LRL" && (direction==2))
     {
@@ -689,16 +697,16 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
     bool ret = true;
     while (ret)
     {
-      nodo_feature_list* aux= *featureList->getIndex();
+            NodeFeatureList* aux= *featureList->getIndex();
       if (aux->mark == SLASTW)  sw->winPushSwnFeature(stk);
       else if (aux->mark == WMARK)  sw->winPushWordFeature((void *)aux,d,stk,direction);
       else if (aux->mark == KMARK)  sw->winPushAmbiguityFeature((void *)aux,d,stk,direction);
       else if (aux->mark == MMARK)  sw->winPushMaybeFeature((void *)aux,d,stk,direction);
       else if (aux->mark == PMARK)  sw->winPushPosFeature((void *)aux,d,stk,direction);
       else if (aux->mark == MFTMARK)  sw->winPushMFTFeature((void *)aux,d,stk,direction);
-      else if (is_unk==TRUE)
+      else if (is_unk == true)
       {
-        int *param = NULL;
+        int *param = nullptr;
         // when aux->l is empty, our feature has no parameters (eg. "lower
         // case"), so param can be left unitialized.
         if (!aux->l.isEmpty())
@@ -748,7 +756,7 @@ void tagger::taggerGenerateScore(nodo *elem,int direction)
 
   elem->pos = weight[max].pos;
   elem->weight = weight[max].data;
-  
+
   if (flow =="LRL")
   {
     weight_node_t* score = new weight_node_t();
@@ -769,7 +777,7 @@ std::vector<weight_node_t> tagger::taggerCreateWeightNodeArray(unsigned int numM
   unsigned int j = numMaybe;
   std::vector<weight_node_t> weight(numMaybe);
   simpleList<infoDict*> *list = &d->getElementMaybe(index);
-  
+
   bool ret=true;
   while (ret && numMaybe > 0)
     {
@@ -798,7 +806,7 @@ void tagger::setPossibles(const std::vector<std::string> &possibles) {
 
 /***************************************************************/
 
-std::string tagger::taggerSumWeight(weightRepository* wRep, std::vector<weight_node_t> &weight, unsigned int numMaybe, int* max)
+std::string tagger::taggerSumWeight(WeightRepository* wRep, std::vector<weight_node_t> &weight, unsigned int numMaybe, int* max)
 {
 //   weight_node_t *aux;
   long double w,b = 0;
@@ -813,10 +821,10 @@ std::string tagger::taggerSumWeight(weightRepository* wRep, std::vector<weight_n
     {
       if (putBias)
         {
-          b = wRep->wrGetWeight("BIASES",weight[j].pos);
+          b = wRep->getWeight("BIASES",weight[j].pos);
           weight[j].data = weight[j].data - b;
         }
-      w = wRep->wrGetWeight(feature,weight[j].pos);
+      w = wRep->getWeight(feature,weight[j].pos);
       weight[j].data=weight[j].data+w;
       if (weight[*max].data < weight[j].data) {
         *max=j;
@@ -854,7 +862,7 @@ std::vector<weight_node_t> tagger::taggerCreateWeightUnkArray(unsigned int *numM
 
   *numMaybe = 0;
 
-  if ((f = fopen(name.c_str(), "rt"))== NULL)
+  if ((f = fopen(name.c_str(), "rt"))== nullptr)
     {
       std::cerr << "Error opening file: "<<name<<std::endl;
       exit(0);

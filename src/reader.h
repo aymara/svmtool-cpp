@@ -6,7 +6,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -24,7 +24,7 @@
 #include <sstream>
 #include <set>
 
-class nodo;
+struct nodo;
 
 class reader
 {
@@ -36,11 +36,11 @@ class reader
 
     int nextNode(nodo**);
 
-    /* Constructs a nodo given the textual information about it 
+    /* Constructs a nodo given the textual information about it
      * Does not fill the weights or the neighbor information */
     nodo* buildNode(std::string &word, std::string &comment);
 
-    /* examples of accepted input: 
+    /* examples of accepted input:
      *   - ## this a comment
      *   - the
      *   - the # another comment

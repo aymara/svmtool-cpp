@@ -1,0 +1,30 @@
+FROM aymara/manylinux_2_28_with_qt6.5:latest as aymara_manylinux_2_28_with_qt
+
+ARG MANYLINUX_TAG
+FROM quay.io/pypa/manylinux_2_28_x86_64:2022-10-25-fbea779
+
+COPY --from=aymara_manylinux_2_28_with_qt /opt /opt
+COPY --from=aymara_manylinux_2_28_with_qt /usr/local /usr/local
+
+RUN yum install -y wget gcc-toolset-10.x86_64 ninja-build --nogpgcheck
+
+WORKDIR /src
+RUN git clone https://github.com/shogo82148/TinySVM.git
+WORKDIR /src/TinySVM
+RUN autoreconf -i
+RUN ./configure --prefix=/opt/svmtool++
+RUN make -j && make install
+
+
+RUN install -d /src/svmtool++
+#COPY config.svmt LGPL.txt src/ SystemSpecificInformations.cmake FindSVMTOOL++.cmake     README.md SVMTOOL++Config.cmake TODO.TXT CMakeLists.txt  INSTALL sample/ /src/svmtool++/
+COPY . /src/svmtool++/
+
+
+RUN install -d /src/svmtool++/build
+ 
+# Build
+WORKDIR /src/svmtool++/build
+RUN cat ../CMakeLists.txt
+RUN cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/opt/svmtool++ -DCMAKE_BUILD_TYPE=Release ..
+RUN ninja all && ninja install

@@ -206,7 +206,7 @@ void learner::read_config_file(const std::string& config_file)
       DO.push(modelo);
 	 }
       }
-      else if (posEqual >= 0) {        
+      else if (posEqual >= 0) {
          vector<string> tokenseq;
          Tokenize(trim(line), tokenseq, equaldelimiter);
          vector<string>::iterator token = tokens.begin();
@@ -217,7 +217,7 @@ void learner::read_config_file(const std::string& config_file)
 	 string param = trim(tokenseq[1]);
 
          //cout << arg << " :: " << param << "\n";
-         
+
          vector<string> params;
          Tokenize(trim(param), params, delimiter);
 
@@ -232,7 +232,7 @@ void learner::read_config_file(const std::string& config_file)
          else if ((arg.compare("A3u") == 0) || (arg.compare("A3unk") == 0)) { A3UNK = read_feature_list_from_string(params); }
          else if ((arg.compare("A4u") == 0) || (arg.compare("A4unk") == 0)) { A4UNK = read_feature_list_from_string(params); }
 
-         
+
          else if (arg.compare("F") == 0) {
 	   if (params.size() >= 2) { COUNT_CUT_OFF = atoi(params[0].c_str()); MAX_MAPPING_SIZE = atoi(params[1].c_str()); }
          }
@@ -307,7 +307,7 @@ void learner::read_config_file(const std::string& config_file)
 	 }
       }
    }
-  
+
    if (verbose==TRUE) {
       fprintf(stderr,"\n* ===================== SVMTlearn configuration ==========================");
       fprintf(stderr,"\n* config file   = [ %s ]\n* trainset      = [ %s ]\n* model name    = [ %s ]",config_file.c_str(),TRAINSET,NAME);
@@ -322,7 +322,7 @@ void learner::read_config_file(const std::string& config_file)
       fprintf(stderr,"\n* Unknown weights filter   = [ Ufilter = %f ]",UFILTER);
       fprintf(stderr,"\n* sliding window settings  = [ WINDOW SIZE = %d , CORE POSITION = %d ]",WINDOW_SIZE,CORE_POSITION);
       fprintf(stderr,"\n* mapping settings         = [ COUNT CUT OFF = %d , MAX MAPPING SIZE = %d ]",COUNT_CUT_OFF,MAX_MAPPING_SIZE);
-      fprintf(stderr,"\n* remove temporal files    = [ %d ] (1) TRUE, (0) FALSE",REMOVE_FILES);	
+      fprintf(stderr,"\n* remove temporal files    = [ %d ] (1) TRUE, (0) FALSE",REMOVE_FILES);
       fprintf(stderr,"\n* ========================================================================");
    }
 
@@ -516,9 +516,9 @@ void learner::learnerCount(const std::string& name, int *nWords, int *nSentences
     }
   fclose(f);
 
-  if ( contWords <= 1 ) 
+  if ( contWords <= 1 )
     {
-      fprintf(stderr,"\n\nInput corpus too short to begin training!! Program stopped.\n\n"); 
+      fprintf(stderr,"\n\nInput corpus too short to begin training!! Program stopped.\n\n");
       exit(0);
     }
 
@@ -570,7 +570,7 @@ void learner::learnerPushSample(const std::string& wrd,int numModel,int directio
     std::string fileName;
     //Se abre el fichero donde se debe insertar el ejemplo.
     generateFileName(NAME,pos,numModel,direction, Known_or_Unknown, "POS", fileName);
-  
+
     FILE *f = openFile(fileName,"a+");
 
     //Se obtiene la lista de posibles etiquetas morfosintácticas para
@@ -770,8 +770,8 @@ void learner::learnerDressNakedSetTrain(dictionary* d, mapping* m, FILE* f, cons
  * de Joachims, se rellenan las estructuras de datos con los pesos
  * (learnerBuiltWeightRepository) y los sesgos (learnerBuiltBias)
  * Una vez procesadas todas las etiquetas morfosintácticas a entrenar, el depósito
- * de pesos y el hashing de sesgos contienen todos los datos del modelo y se escriben 
- * en disco mediante los métodos weightRepository.wrWriteHash para los sesgos y 
+ * de pesos y el hashing de sesgos contienen todos los datos del modelo y se escriben
+ * en disco mediante los métodos weightRepository.wrWriteHash para los sesgos y
  * weightRepository.wrWrite para los pesos.
  */
 
@@ -807,7 +807,7 @@ void learner::learnerDoLearn(FILE* f, int numModel, int LR_or_RL, int K_or_U, di
   //Creamos el depósito de pesos y el hash de sesgos
   hash_t<weight_node_t*> *b = new hash_t<weight_node_t*>;
   b->hash_init(30);
-  weightRepository *wr = new weightRepository;
+    WeightRepository *wr = new WeightRepository;
 
   infoDict *pInfo;
   int nPositive=0,nNegative=0;
@@ -867,21 +867,21 @@ learnerDressNakedSetTrain(d,m,f,pInfo->pos,numModel,LR_or_RL, K_or_U,&nPositive,
   generateFileName(NAME,"",numModel,LR_or_RL,K_or_U,"MRG",fileName);
   if ( verbose == TRUE ) fprintf(stderr,"\nStoring MERGED MODEL [ %s ]",fileName.c_str());
   //Modificación 180705: Filtrado de pesos
-  if ( K_or_U == KNOWN ) wr->wrWrite(fileName, KFILTER); //ADD 180705
-  else wr->wrWrite(fileName, UFILTER); //ADD 180705
+  if ( K_or_U == KNOWN ) wr->write(fileName, KFILTER); //ADD 180705
+  else wr->write(fileName, UFILTER); //ADD 180705
   //Escribir deposito de pesos en disco
   //wr->wrWrite(fileName); //DEL 180705
   if ( verbose == TRUE ) fprintf(stderr," [DONE]");
 
   FILE *fwr = openFile(fileName,"a+");
   fprintf (fwr,"BIASES ");
-  wr->wrWriteHash(b,fwr,' ');  //Escribir biases en fichero de depósito de pesos
+  wr->writeHash(b,fwr,' ');  //Escribir biases en fichero de depósito de pesos
   fclose(fwr);
 
   generateFileName(NAME,"",numModel,LR_or_RL,K_or_U,"B",fileName);
   if ( verbose == TRUE ) fprintf(stderr,"\nStoring BIASES [ %s ]",fileName.c_str());
   FILE *fb =openFile(fileName,"w");
-  wr->wrWriteHash(b,fb,'\n');  //Escribir biases en fichero de sesgos
+  wr->writeHash(b,fb,'\n');  //Escribir biases en fichero de sesgos
   fclose(fb);
 
   if ( verbose == TRUE ) fprintf(stderr," [DONE]");
@@ -910,7 +910,7 @@ void learner::learnerTrainModel(const std::string& trainingFileName, dictionary 
   std::ostringstream name;
 
   //Carga las listas de atributos
-  simpleList<nodo_feature_list*> featureList,featureListUnk;
+  simpleList<NodeFeatureList*> featureList,featureListUnk;
   name << std::string(NAME) << std::string(".A") << numModel;
   createFeatureList(name.str(),&featureList);
   name.rdbuf()->str("");
@@ -1066,7 +1066,7 @@ void learner::learnerTrainModel(const std::string& trainingFileName, dictionary 
   }
   //fin para cada direccion
   //fin para cada tipo
-  
+
   destroyFeatureList(&featureList);
   destroyFeatureList(&featureListUnk);
 }
@@ -1074,14 +1074,14 @@ void learner::learnerTrainModel(const std::string& trainingFileName, dictionary 
 /**********************************************************/
 
 /*
- * Recibe como parámetros: wrd un string con una palabra,  
- * pos un string con una etiqueta, Known_or_Unknown si la 
- * palabra es conocida o desconocida. Si la palabra es conocida 
- * devuelve TRUE si la etiqueta pos está en la lista de etiquetas 
- * morfosintácticas ambiguas. Si la palabra es desconocida 
- * devuelve TRUE si la etiqueta pos pertenece a lista de posibles 
- * categorías morfosintácticas para palabras desconocidas. En cualquier 
- * otro caso devuelve FALSE. 
+ * Recibe como parámetros: wrd un string con una palabra,
+ * pos un string con una etiqueta, Known_or_Unknown si la
+ * palabra es conocida o desconocida. Si la palabra es conocida
+ * devuelve TRUE si la etiqueta pos está en la lista de etiquetas
+ * morfosintácticas ambiguas. Si la palabra es desconocida
+ * devuelve TRUE si la etiqueta pos pertenece a lista de posibles
+ * categorías morfosintácticas para palabras desconocidas. En cualquier
+ * otro caso devuelve FALSE.
  */
 int learner::learnerIsPossiblePOS(const std::string& /*wrd*/, const std::string& pos, int Known_or_Unknown)
 {
@@ -1104,11 +1104,11 @@ int learner::learnerIsPossiblePOS(const std::string& /*wrd*/, const std::string&
 
 /**************************************************************/
 /*
- * Recibe como parámetros: 
- *	wrd un string con una palabra, 
- *	Known_or_Unknown un entero que indica si la palabra 
- *			 es conocida o desconocida y 
- *	un apuntador d al diccionario. Devuelve un apuntador a una lista. 
+ * Recibe como parámetros:
+ *	wrd un string con una palabra,
+ *	Known_or_Unknown un entero que indica si la palabra
+ *			 es conocida o desconocida y
+ *	un apuntador d al diccionario. Devuelve un apuntador a una lista.
  */
 simpleList<infoDict*>* learner::learnerGetPotser(const std::string& wrd, int Known_or_Unknown, dictionary* d)
 {
@@ -1117,11 +1117,11 @@ simpleList<infoDict*>* learner::learnerGetPotser(const std::string& wrd, int Kno
   infoDict *pInfoDict;
   simpleList<infoDict*>* lout = new simpleList<infoDict*>();
 
-  //Si es conocida recoge las posibles etiquetas que contiene el diccionario 
+  //Si es conocida recoge las posibles etiquetas que contiene el diccionario
   //para la palabra wrd  y mira si existen en la lista de categorías
-  //morfosintácticas ambiguas. Si existen en la lista de etiquetas ambiguas 
-  //las añade a la lista de salida, en caso contrario si no esta es posible 
-  //etiqueta ambigua y es la etiqueta más frecuente se devuelve una lista 
+  //morfosintácticas ambiguas. Si existen en la lista de etiquetas ambiguas
+  //las añade a la lista de salida, en caso contrario si no esta es posible
+  //etiqueta ambigua y es la etiqueta más frecuente se devuelve una lista
   //sólo con la etiqueta más frecuente.
   if (Known_or_Unknown==KNOWN)
   {
@@ -1156,7 +1156,7 @@ simpleList<infoDict*>* learner::learnerGetPotser(const std::string& wrd, int Kno
     }
   }
   //Si la palabra es desconocida la lista de salida contiene todas las
-  //categorías morfosintácticas posibles desconocidas. 
+  //categorías morfosintácticas posibles desconocidas.
   else	if (Known_or_Unknown==UNKNOWN)
     {
 	 learnerUNKP_L->setFirst();
@@ -1179,22 +1179,22 @@ simpleList<infoDict*>* learner::learnerGetPotser(const std::string& wrd, int Kno
 
 /**********************************************************/
 /*
- * Recibe como parámetros: 
- * un apuntador al depósito de pesos (wr), 
- * un apuntador a mapping (m), 
- * un string con la etiqueta (pos) que estamos entrenando y 
+ * Recibe como parámetros:
+ * un apuntador al depósito de pesos (wr),
+ * un apuntador a mapping (m),
+ * un string con la etiqueta (pos) que estamos entrenando y
  * el nombre del fichero  (fileName) en el cual se almacenan las SVs
- * para la etiqueta indicada. 
+ * para la etiqueta indicada.
  *
  * Partiendo de estos datos recorre el fichero fileName,  traduciendo
- * cada uno de los atributos leídos gracias al mapping (m). 
- * Y añadiendo la correspondiente pareja etiqueta/atributo 
+ * cada uno de los atributos leídos gracias al mapping (m).
+ * Y añadiendo la correspondiente pareja etiqueta/atributo
  * al depósito de pesos wr mediante el método wrAdd.
  *
- * Se devuelve el apuntador al depósito de pesos (weightRepository) 
+ * Se devuelve el apuntador al depósito de pesos (weightRepository)
  * que ha sido modificado.
  */
-weightRepository *learner::learnerBuiltWeightRepository(weightRepository* wr, mapping* m, const std::string& pos, const std::string& fileName)
+WeightRepository *learner::learnerBuiltWeightRepository(WeightRepository* wr, mapping* m, const std::string& pos, const std::string& fileName)
 {
   std::string str;
   std::string key;
@@ -1223,7 +1223,7 @@ weightRepository *learner::learnerBuiltWeightRepository(weightRepository* wr, ma
           key = m->mappingGetFeatureByNumber(str.c_str());
           ret = readTo(f,' ','\n',str);
           //if ((int)key != HASH_FAIL) wr->wrAdd(key,pos,ld);
-          if (atoi(key.c_str()) != HASH_FAIL) wr->wrAdd(key,pos,ld);
+          if (atoi(key.c_str()) != HASH_FAIL) wr->add(key,pos,ld);
         }
       }
     }
@@ -1241,14 +1241,14 @@ void learner::learnerDestroyBias(hash_t<weight_node_t*> *h)
 
 /**************************************************************/
 
-/* 
- * Recibe como parámetros: 
- * Un apuntador a hash_t (h) que es el lugar donde almacenaremos los sesgos, 
+/*
+ * Recibe como parámetros:
+ * Un apuntador a hash_t (h) que es el lugar donde almacenaremos los sesgos,
  * la etiqueta (pos) que estamos entrenando y el fichero (fileName) de salida
  * de SVM-light en el cual se encuentran los datos esperados.
- * Este método lee el sesgo del fichero y lo añade (hash_insert) 
- * al hashing h para la etiqueta pos indicada. 
- * Posteriormente devuelve el apuntador al hashing modificado. 
+ * Este método lee el sesgo del fichero y lo añade (hash_insert)
+ * al hashing h para la etiqueta pos indicada.
+ * Posteriormente devuelve el apuntador al hashing modificado.
  */
 hash_t<weight_node_t*> *learner::learnerBuiltBias(hash_t<weight_node_t*>* h, const std::string& pos, const std::string& fileName)
 {
@@ -1284,7 +1284,7 @@ hash_t<weight_node_t*> *learner::learnerBuiltBias(hash_t<weight_node_t*>* h, con
 
 /*
  * Recibe como parámetro el nombre del fichero de configuración (train).
- * Ejecuta el aprendizaje 
+ * Ejecuta el aprendizaje
  */
 void learner::learnerRun(const std::string& train)
 {
@@ -1309,7 +1309,7 @@ void learner::learnerRun(const std::string& train)
   clock_t start,end;
   start = times(&tbuff1);
 #endif
-  
+
   //Creamos el diccionario
   std::string name;
   name = std::string(NAME) + ".DICT";
@@ -1386,7 +1386,7 @@ void learner::learnerRun(const std::string& train)
 /*
  * Recorre el texto de izquierda a derecha seleccionando ejemplos
  */
-int learner::learnerLeftToRight(simpleList<nodo_feature_list*>* featureList, simpleList<nodo_feature_list*>* featureListUnk, dictionary *dKnown, dictionary *dUnknown, int numWrds, int inicio)
+int learner::learnerLeftToRight(simpleList<NodeFeatureList*>* featureList, simpleList<NodeFeatureList*>* featureListUnk, dictionary *dKnown, dictionary *dUnknown, int numWrds, int inicio)
 {
   std::cerr << "learner::learnerLeftToRight" << std::endl;
   bool ret = true;
@@ -1400,11 +1400,11 @@ int learner::learnerLeftToRight(simpleList<nodo_feature_list*>* featureList, sim
       if (inicio > sw->getIndex()->ord ) ret = sw->next();
     }
   }
-  nodo *elem = sw->getIndex();
+    nodo *elem = sw->getIndex();
   numWrds--;
   learnerGenerateFeatures(elem,featureList,dKnown, LEFT_TO_RIGHT);
   learnerGenerateFeaturesUnk(elem,featureListUnk,dKnown, dUnknown, LEFT_TO_RIGHT);
-  
+
   while(numWrds>=0)
     {
       if ( !sw->next() ) return numWrds;
@@ -1423,7 +1423,7 @@ int learner::learnerLeftToRight(simpleList<nodo_feature_list*>* featureList, sim
 /*
  * Recorre el texto de derecha a izquierda seleccionando ejemplos
  */
-int learner::learnerRightToLeft(simpleList<nodo_feature_list*>* featureList, simpleList<nodo_feature_list*>* featureListUnk, dictionary *dKnown, dictionary *dUnknown, int numWrds, int inicio)
+int learner::learnerRightToLeft(simpleList<NodeFeatureList*>* featureList, simpleList<NodeFeatureList*>* featureListUnk, dictionary *dKnown, dictionary *dUnknown, int numWrds, int inicio)
 {
   std::cerr << "learner::learnerRightToLeft" << std::endl;
   bool ret = true;
@@ -1438,7 +1438,7 @@ int learner::learnerRightToLeft(simpleList<nodo_feature_list*>* featureList, sim
       }
     }
 
-  nodo *elem = sw->getIndex();
+    nodo *elem = sw->getIndex();
   numWrds--;
   learnerGenerateFeatures(elem,featureList,dKnown,RIGHT_TO_LEFT);
   learnerGenerateFeaturesUnk(elem,featureListUnk,dKnown,dUnknown,RIGHT_TO_LEFT);
@@ -1458,19 +1458,19 @@ int learner::learnerRightToLeft(simpleList<nodo_feature_list*>* featureList, sim
 
 /**************************************************************/
 /*
- * Esta función recibe como parámetros: 
+ * Esta función recibe como parámetros:
  * el apuntador a un nodo de la ventana (elem),
- * una pila donde apilara los atributos generados (stk), 
- * la lista de atributos que debe generar (featureList), 
- * el diccionario con la información necesaria para el cálculo de features (d) 
- * y  la dirección en que se recorre el corpus (direction). 	
- * Recorre la lista featureList y ejecuta los métodos necesarios 
- * de la ventana (swindow) para generar los atributos y que al final 
+ * una pila donde apilara los atributos generados (stk),
+ * la lista de atributos que debe generar (featureList),
+ * el diccionario con la información necesaria para el cálculo de features (d)
+ * y  la dirección en que se recorre el corpus (direction).
+ * Recorre la lista featureList y ejecuta los métodos necesarios
+ * de la ventana (swindow) para generar los atributos y que al final
  * de la ejecución de este método esten apilados en stk.
 */
-void learner::learnerGetFeatures(nodo* elem, std::stack<std::string>& stk, dictionary* d, simpleList<nodo_feature_list*>* featureList, int direction)
+void learner::learnerGetFeatures(nodo* elem, std::stack<std::string>& stk, dictionary* d, simpleList<NodeFeatureList*>* featureList, int direction)
 {
-  nodo_feature_list* aux = NULL;
+    NodeFeatureList* aux = NULL;
   bool ret = true;
   //Recorre la lista de atributos y crea los atributos correspondientes
   while (ret)
@@ -1516,9 +1516,9 @@ void learner::learnerGetFeatures(nodo* elem, std::stack<std::string>& stk, dicti
 /*
  * El objetivo de este mï¿½todo es seleccionar o descartar una palabra para
  * realizar en el entrenamiento de palabras desconocidas, calcular respectivos
- * atributos e insertar esta informaciï¿½n en el fichero de ejemplos correspondiente. 
+ * atributos e insertar esta informaciï¿½n en el fichero de ejemplos correspondiente.
  */
-void learner::learnerGenerateFeaturesUnk(nodo *elem, simpleList<nodo_feature_list*>* featureList,dictionary *d, dictionary *dUnk, int direction)
+void learner::learnerGenerateFeaturesUnk(nodo *elem, simpleList<NodeFeatureList*>* featureList,dictionary *d, dictionary *dUnk, int direction)
 {
   std::stack<std::string> stk;
 //   nodo_feature_list *aux;
@@ -1570,9 +1570,9 @@ void learner::learnerGenerateFeaturesUnk(nodo *elem, simpleList<nodo_feature_lis
 /*
  * El objetivo de este mï¿½todo es seleccionar o descartar una palabra para
  * realizar en el entrenamiento de palabras conocidas, calcular respectivos
- * atributos e insertar esta informaciï¿½n en el fichero de ejemplos correspondiente. 
+ * atributos e insertar esta informaciï¿½n en el fichero de ejemplos correspondiente.
  */
-void learner::learnerGenerateFeatures(nodo *elem, simpleList<nodo_feature_list*>* featureList,dictionary *d, int direction)
+void learner::learnerGenerateFeatures(nodo *elem, simpleList<NodeFeatureList*>* featureList,dictionary *d, int direction)
 {
   std::stack<std::string> stk;
 //   nodo_feature_list *aux;
@@ -1619,11 +1619,11 @@ void learner::learnerGenerateFeatures(nodo *elem, simpleList<nodo_feature_list*>
 
 /************************************************************/
 /*
- * Ejecuta SVM-light. Recibe como parámetros cuatro cadenas de 
- * caracteres: svmdir es el directorio en el que se encuentra SVM-light,  
+ * Ejecuta SVM-light. Recibe como parámetros cuatro cadenas de
+ * caracteres: svmdir es el directorio en el que se encuentra SVM-light,
  * options son las opciones con que se lanzará SVM-light, posFile el nombre
- * del fichero de ejemplos usado como entrada para la herramienta 
- * de Joachims y, por último, outFile que es el nombre del fichero 
+ * del fichero de ejemplos usado como entrada para la herramienta
+ * de Joachims y, por último, outFile que es el nombre del fichero
  * de salida.  Esta función devuelve 0.
 */
 int learner::learnerExecSVMlight(const std::string& svmdir, const std::string& options, const std::string& posFile, const std::string& outFile)
@@ -1634,7 +1634,7 @@ int learner::learnerExecSVMlight(const std::string& svmdir, const std::string& o
 
   std::string command;
   command = svmdir + "/svm_learn -v 0  "+options+" "+posFile+" "+outFile;
-  
+
   if ( verbose == TRUE ) fprintf(stderr,"Executing Joachims svm_light [ with options: %s ]  ",options.c_str());
   system(command.c_str());
   if ( verbose == TRUE ) fprintf(stderr," [DONE]");
@@ -1667,14 +1667,14 @@ simpleList<infoDict*>* learner::learnerTransformHashInList(hash_t<infoDict*> *tp
 /**************************************************************/
 
 /*
- * Calcularemos el número de fragmentos en el que se ha de dividir 
- * el corpus para conseguir un porcentaje de palabras desconocidas 
- * determinado. Lo parámetros de entrada son el nombre del fichero 
- * de entrenamiento (trainingFileName), el porcentaje de palabras 
- * desconocidas deseado (percentage) y el número de frases del corpus 
+ * Calcularemos el número de fragmentos en el que se ha de dividir
+ * el corpus para conseguir un porcentaje de palabras desconocidas
+ * determinado. Lo parámetros de entrada son el nombre del fichero
+ * de entrenamiento (trainingFileName), el porcentaje de palabras
+ * desconocidas deseado (percentage) y el número de frases del corpus
  * (nSentences). El valor devuelto es un entero indicando el número de
  * fragmentos. Si el número de fragmentos calculado es mayor que el número
- * de frases que contiene el corpus de entrenamiento se devolverá como el 
+ * de frases que contiene el corpus de entrenamiento se devolverá como el
  * número de frases (nSentences).
  */
 int learner::learnerNumChunks(const std::string& trainingFileName,float /*percentage*/,int nSentences)

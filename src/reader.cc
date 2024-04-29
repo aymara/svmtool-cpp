@@ -6,7 +6,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -31,7 +31,7 @@ int reader::nextNode(nodo **node) {
   std::set<std::string> tags;
 
   int ret;
- 
+
   while((ret = parseWord(word, tags, comment)) == 1);
 
   if(ret == -2) {
@@ -48,7 +48,7 @@ int reader::nextNode(nodo **node) {
 
 nodo* reader::buildNode(std::string &word, std::string &comment)
 {
-  nodo *node = new nodo;
+  auto node = new struct nodo();
 
   // wrd and realWrd
   node->realWrd = word;
@@ -107,7 +107,7 @@ int reader::parseWord(std::string& token, std::set<std::string> &tagset, std::st
   // are tags real tags or only a comment?
   if(!tags.empty()) {
     // parse the tags
- 
+
     // remove parentheses around tags list
     int i = 0;
     std::string::size_type j = tags.find_first_of(',');

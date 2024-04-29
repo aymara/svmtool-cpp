@@ -5,7 +5,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -61,31 +61,30 @@ infoDict* dictionary::getMFT(dataDict*  w)
 
 std::string dictionary::getAmbiguityClass(dataDict* w)
 {
-	char *amb = new char[200];
-	if ((long)w==HASH_FAIL)
-	{
-	 sprintf(amb,"UNKNOWN");
-	 return amb;
-	}
+  std::string amb;
+  if ((long)w==HASH_FAIL)
+  {
+    amb = "UNKNOWN";
+    return amb;
+  }
 
-	bool ret = true;
-	strcpy(amb,"");
-	simpleList<infoDict*> *l = &this->getElementMaybe(w);
-	int numMaybe = this->getElementNumMaybe(w);
-	infoDict *ptr;
+  bool ret = true;
+  simpleList<infoDict*> *l = &this->getElementMaybe(w);
+  int numMaybe = this->getElementNumMaybe(w);
+  infoDict *ptr;
 
-	l->setFirst();
-	while (ret)
-	{
-	  numMaybe--;
-  	  ptr = *l->getIndex();
-      // fprintf(stderr," %s %d",ptr->pos,ptr->num);
-	  if (numMaybe>0) sprintf(amb,"%s%s_",amb,ptr->pos.c_str());
-    else sprintf(amb,"%s%s",amb,ptr->pos.c_str());
-	  ret = l->next();
-	}
-	l->setFirst();
-	return amb;
+  l->setFirst();
+  while (ret)
+  {
+    numMaybe--;
+    ptr = *l->getIndex();
+    // fprintf(stderr," %s %d",ptr->pos,ptr->num);
+    if (numMaybe>0) amb = amb + ptr->pos.c_str() + "_";
+    else amb = amb + ptr->pos.c_str();
+    ret = l->next();
+  }
+  l->setFirst();
+  return amb;
 }
 
 /**************************************************/
@@ -259,44 +258,48 @@ void dictionary::dictRepairFromFile(const std::string& fileName)
   // Bucle para leer lista de palabras
   while (!feof(f))
   {
-    fscanf(f,"%s %d %d",wrd,&numWrd,&numMaybe);
-    dataDict* w = d.hash_lookup(wrd);
-    if ((long)w!=HASH_FAIL)
+    if (fscanf(f,"%s %d %d",wrd,&numWrd,&numMaybe) == 3)
     {
-      aux = new dataDict;
-      aux->wrd = wrd;
-      aux->numWrd = getElementNumWord(w);
-      aux->numMaybe = 0;
-
-      simpleList<infoDict*> *l = &getElementMaybe(w);
-
-      for (int i=0;i<numMaybe;i++)
+      dataDict* w = d.hash_lookup(wrd);
+      if ((long)w!=HASH_FAIL)
       {
-        fscanf(f,"%s %d",pos,&numWrdxPOS);
-        bool ret=true;
+        aux = new dataDict;
+        aux->wrd = wrd;
+        aux->numWrd = getElementNumWord(w);
+        aux->numMaybe = 0;
 
-        while (ret)
+        simpleList<infoDict*> *l = &getElementMaybe(w);
+
+        for (int i=0;i<numMaybe;i++)
         {
-          infoDict *ptr = *l->getIndex();
-          if (pos == ptr->pos)
+          if (fscanf(f,"%s %d",pos,&numWrdxPOS) == 2)
           {
-            //Copiamos  elemento a añadir
-            infoDict *tmpInfoDict = new infoDict;
-            tmpInfoDict->pos = ptr->pos;
-            tmpInfoDict->num = ptr->num;
+            bool ret=true;
 
-            aux->maybe.add(tmpInfoDict);
-            aux->numMaybe++;
-            ret = false;
-            delete ptr; //Borrar substituido
+            while (ret)
+            {
+              infoDict *ptr = *l->getIndex();
+              if (pos == ptr->pos)
+              {
+                //Copiamos  elemento a añadir
+                infoDict *tmpInfoDict = new infoDict;
+                tmpInfoDict->pos = ptr->pos;
+                tmpInfoDict->num = ptr->num;
+
+                aux->maybe.add(tmpInfoDict);
+                aux->numMaybe++;
+                ret = false;
+                delete ptr; //Borrar substituido
+              }
+              else ret = l->next();
+            }
+            l->setFirst();
           }
-          else ret = l->next();
         }
-        l->setFirst();
-      }
 
-      delete d.hash_delete(wrd);
-      d.hash_insert(aux->wrd,aux);
+        delete d.hash_delete(wrd);
+        d.hash_insert(aux->wrd,aux);
+      }
     }
   }
   fclose(f);
@@ -329,7 +332,7 @@ void dictionary::dictRepairHeuristic(float dratio)
       }
       ret = l->next();
     }
-    dd->numWrd =  iNumWrdsAfterDelete; 
+    dd->numWrd =  iNumWrdsAfterDelete;
     l->setFirst();
   }
 }
@@ -338,18 +341,18 @@ void dictionary::dictRepairHeuristic(float dratio)
 
 int dictionary::readInt(FILE *in)
 {	int i=0;
- char value[10];
+ std::string value;
  char c=' ';
 
- strcpy(value,"");
-
  while ((c==' ') && (!feof(in))) c=fgetc(in);
- while ((i<10) && (c!=' ') && (c!='\n') && (!feof(in)))
+ while ( (c >='0' && c <= '9')
+   && ( (c!=' ') && (c!='\n') )
+   && (!feof(in)))
    {
-     sprintf(value,"%s%c",value,c); 
+     value += c;
      c=fgetc(in); i++;
    }
- return atoi(value);
+ return atoi(value.c_str());
 }
 
 /**************************************************/
@@ -362,7 +365,7 @@ infoDict *dictionary::readData(FILE *in)
 
   data->pos = "";
 
-  while ( (i<TAMTXT) && (c!=' ' && c!='\n' && c!='\t') && (!feof(in)) )
+  while ( (c!=' ' && c!='\n' && c!='\t') && (!feof(in)) )
     {
       data->pos += c;
       c=fgetc(in);
@@ -377,12 +380,12 @@ infoDict *dictionary::readData(FILE *in)
 void dictionary::dictAddBackup(const std::string& name)
 {
   FILE *f = openFile(name,"r");
-  
+
 //   char wrd[250],pos[10];
   int i;
   dataDict *aux;
   infoDict *data;
-  
+
   // Loop to read list of words
   while (!feof(f))
   {
@@ -405,7 +408,7 @@ void dictionary::dictAddBackup(const std::string& name)
       data = readData(f);
       bool ret=true;
       //If not found add it to the list
-      for (int j=aux->numMaybe;ret>=0 &&  j>0; j--)
+      for (int j=aux->numMaybe;ret &&  j>0; j--)
       {
         infoDict *element = *aux->maybe.getIndex();
         if (data->pos == element->pos)
@@ -462,7 +465,7 @@ void dictionary::addBackupEntry(const std::string& token, const std::set<std::st
       aux->maybe.next();
     }
     aux->maybe.setFirst();
-    
+
     //If not found add it to the list
     if (ret)
     {
@@ -623,7 +626,7 @@ hash_t<infoDict*> *dictionary::dictFindAmbP(int *numPOS)
   for (hash_t<dataDict*>::iterator it  = d.begin(); it != d.end(); it++)
   {
     dataDict *aux = (*it).second;
-  
+
 //     hash_node_t *old_hash, *tmp;
 //     int old_size, h, i;
 
@@ -641,7 +644,7 @@ hash_t<infoDict*> *dictionary::dictFindAmbP(int *numPOS)
         tmp->num = data->num;
         ambp->hash_insert(tmp->pos,tmp);
 
-        *numPOS++;
+        (*numPOS)++;
         ret=aux->maybe.next();
       }
       aux->maybe.setFirst();
@@ -664,7 +667,7 @@ hash_t<infoDict*> *dictionary::dictFindUnkP(int *numPOS)
   for (hash_t<dataDict*>::iterator it  = d.begin(); it != d.end(); it++)
   {
     dataDict *aux = (*it).second;
-  
+
     *numPOS = 0;
 
     aux->maybe.setFirst();
@@ -678,7 +681,7 @@ hash_t<infoDict*> *dictionary::dictFindUnkP(int *numPOS)
         tmp->pos = data->pos;
         tmp->num = data->num;
         unkp->hash_insert(tmp->pos,tmp);
-        *numPOS++;
+        (*numPOS)++;
         ret=aux->maybe.next();
       }
       aux->maybe.setFirst();

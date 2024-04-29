@@ -5,7 +5,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -59,7 +59,7 @@ void printHelp(char *progname)
 	fprintf(stderr,"\t\t1\ttwo-passes [revisiting results and relabeling - requires model 2 and model 1]\n");
 	fprintf(stderr,"\t\t2\tone-pass   [robust against unknown words - requires model 0 and model 2]\n");
 	fprintf(stderr,"\t\t3\tone-pass   [unsupervised learning models - requires model 3]\n");
-	fprintf(stderr,"\t\t4\tone-pass   [very robust against unknown words - requires model 4]\n");	
+	fprintf(stderr,"\t\t4\tone-pass   [very robust against unknown words - requires model 4]\n");
 	fprintf(stderr,"\t\t5\tone-pass   [sentence-level likelihood - requires model 0] Not implemented!!\n");
 	fprintf(stderr,"\t\t6\tone-pass   [robust sentence-level likelihood - requires model 4] Not implemented!!\n");
 	fprintf(stderr,"\t-B or -b <backup_lexicon>\n");
@@ -84,9 +84,9 @@ int options(int argc,char *argv[])
 	int isIP=0,ip=4,isLength=0,length=7;
 
 	for (int i=1;i<argc-1;i++)
-	{		
+	{
 	        if (strcmp(argv[i],"-t")==0 || strcmp(argv[i],"-T")==0)
-		{	
+		{
 		  i++;
 		  //if (atoi(argv[i])==0) return -1;
 		}
@@ -119,7 +119,7 @@ int options(int argc,char *argv[])
 
 		}
 		else if (strcmp(argv[i],"-k")==0 || strcmp(argv[i],"-K")==0)
-		{   
+		{
 		    float k;
 		    if ( sscanf(argv[i],"%5f",&k) == EOF) return 'k';
 		}
@@ -141,7 +141,7 @@ int options(int argc,char *argv[])
 int main(int argc, char *argv[])
 {
 	int ret=0;
-	
+
 	erCompRegExp();
 
 	if ((argc<=1) || ((ret=options(argc,argv))<0))
@@ -172,16 +172,16 @@ int main(int argc, char *argv[])
 	  else if (strcmp(argv[i],"-u")==0 || strcmp(argv[i],"-U")==0)
 		{ t.taggerPutUWeightFilter(atof(argv[i+1])); i++;}
 	  else if (strcmp(argv[i],"-t")==0 || strcmp(argv[i],"-T")==0)
-		{ 
-		  //modstat t.taggerPutStrategy(atoi(argv[i+1])-1); 
-		  t.taggerPutStrategy(atoi(argv[i+1])); 
+		{
+		  //modstat t.taggerPutStrategy(atoi(argv[i+1])-1);
+		  t.taggerPutStrategy(atoi(argv[i+1]));
 		  i++;
 		}
 	  else if (strcmp(argv[i],"-s")==0 || strcmp(argv[i],"-S")==0)
 		{ t.taggerPutFlow(argv[i+1]); i++;}
 	  else if (strcmp(argv[i],"-v")==0 || strcmp(argv[i],"-V")==0) verbose = 1;
-	  else if (strcmp(argv[i],"-a")==0 || strcmp(argv[i],"-A")==0) 
-	        { t.taggerActiveShowScoresFlag(); }
+	  else if (strcmp(argv[i],"-a")==0 || strcmp(argv[i],"-A")==0)
+        { t.taggerActiveShowScoresFlag(); }
 	  else if (strcmp(argv[i],"-l")==0 || strcmp(argv[i],"-L")==0)
 		{ t.taggerPutWinLength(atoi(argv[i+1])); i++;}
 	  else if (strcmp(argv[i],"-i")==0 || strcmp(argv[i],"-I")==0)

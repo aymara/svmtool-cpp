@@ -23,8 +23,6 @@
 #include <set>
 #include <string>
 
-#define TAMTXT 100
-
 struct infoDict
 {
   std::string pos;

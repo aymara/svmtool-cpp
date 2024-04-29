@@ -5,7 +5,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -28,10 +28,10 @@
 #include "er.h"
 
 struct models_t{
-    weightRepository *wr,*wr2,*wrUnk,*wrUnk2;
+    WeightRepository *wr,*wr2,*wrUnk,*wrUnk2;
     //hash_t *bias,*bias2,*biasUnk,*biasUnk2;
-    simpleList<nodo_feature_list*> featureList;
-    simpleList<nodo_feature_list*> featureListUnk;
+    simpleList<NodeFeatureList*> featureList;
+    simpleList<NodeFeatureList*> featureListUnk;
 };
 
 
@@ -58,8 +58,8 @@ class tagger
     std::vector<weight_node_t> userWeight;
     void setPossibles(const std::vector<std::string> &possibles);
 
-    std::string taggerSumWeight(weightRepository* wRep, std::vector<weight_node_t> &weight, unsigned int numMaybe, int* max);
-    void taggerGenerateScore(nodo *elem,int direction);
+    std::string taggerSumWeight(WeightRepository* wRep, std::vector<weight_node_t> &weight, unsigned int numMaybe, int* max);
+    void taggerGenerateScore(nodo *elem, int direction);
 
     std::vector<weight_node_t> taggerCreateWeightNodeArray(unsigned int numMaybe, dataDict* index);
     std::vector<weight_node_t> taggerCreateWeightUnkArray(unsigned int *numMaybe);
