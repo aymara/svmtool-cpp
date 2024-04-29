@@ -137,6 +137,6 @@ jobs:
           large-packages: false
           swap-storage: true
       - name: Build image
-        run: docker build -f ./Dockerfile-manylinux2.28 -t aymara/svmtool++-manylinux2.28-qt${QT_VERSION}:latest .
+        run: docker build -f ./Dockerfile-manylinux2.28 -t aymara/svmtoolpp-manylinux2.28-qt${QT_VERSION}:latest .
       - name: "Push image"
-        run: docker push aymara/svmtool++-manylinux2.28-qt${QT_VERSION}:latest
+        run: docker push aymara/svmtoolpp-manylinux2.28-qt${QT_VERSION}:latest
