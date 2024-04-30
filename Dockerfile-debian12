@@ -3,7 +3,7 @@ FROM debian:12
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Setup
-RUN apt-get clean && apt-get update && apt-get install -y -qq locales locales-all apt-utils lsb-release git gcc g++ make curl gawk wget python3 ninja-build
+RUN apt-get clean && apt-get update && apt-get install -y -qq locales locales-all apt-utils lsb-release git gcc g++ autoconf make curl gawk wget python3 ninja-build
 
 WORKDIR /src
 RUN git clone https://github.com/shogo82148/TinySVM.git
