@@ -13,102 +13,56 @@ env:
 
 jobs:
 
-#   #========================================================================
-#   debian12_svmtoolpp:
-#     name: "Build the package for Debian 12"
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
-#       - name: Free Disk Space (Ubuntu)
-#         uses: jlumbroso/free-disk-space@v1.2.0
-#         with:
-#           # this might remove tools that are actually needed,
-#           # if set to "true" but frees about 6 GB
-#           tool-cache: false
-#           # all of these default to true, but feel free to set to
-#           # "false" if necessary for your workflow
-#           android: true
-#           dotnet: true
-#           haskell: true
-#           large-packages: false
-#           swap-storage: true
-#       - name: Build image
-#         run: docker build -f ./Dockerfile-debian12 -t aymara/svmtoolpp-debian12:build .
-#       - name: Extract package and version number from docker image
-#         id: extract
-#         shell: bash
-#         run: |
-#              dockerImage="aymara/svmtoolpp-debian12:build"
-#              packageDir="/usr/share/apps/svmtoolpp/packages/"
-#              cicd/extract_package.sh $dockerImage $packageDir $GITHUB_OUTPUT
-#       - name: Upload nightly build package
-#         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-#         shell: bash
-#         run: |
-#           tagName=${{ steps.extract.outputs.version }}-nightly
-#           gh release create --prerelease ${tagName} || /bin/true
-#           gh release upload ${tagName} --clobber ./${{ steps.extract.outputs.filename }}
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       - name: Upload release package
-#         uses: softprops/action-gh-release@v1
-#         if: ${{ startsWith(github.ref, 'refs/tags/') }}
-#         with:
-#           name: ${{ steps.extract.outputs.version }}
-#           files: |
-#             ./${{ steps.extract.outputs.filename }}
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
-#   #========================================================================
-#   ubuntu22_04_svmtoolpp:
-#     name: "Build the package for Ubuntu 22.04"
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
-#       - name: Free Disk Space (Ubuntu)
-#         uses: jlumbroso/free-disk-space@v1.2.0
-#         with:
-#           # this might remove tools that are actually needed,
-#           # if set to "true" but frees about 6 GB
-#           tool-cache: false
-#           # all of these default to true, but feel free to set to
-#           # "false" if necessary for your workflow
-#           android: true
-#           dotnet: true
-#           haskell: true
-#           large-packages: false
-#           swap-storage: true
-#       - name: Build image
-#         run: docker build -f ./Dockerfile-ubuntu22.04 -t aymara/svmtoolpp-ubuntu22.04:build .
-#       - name: Extract package and version number from docker image
-#         id: extract
-#         shell: bash
-#         run: |
-#              dockerImage="aymara/svmtoolpp-ubuntu22.04:build"
-#              packageDir="/usr/share/apps/svmtoolpp/packages/"
-#              cicd/extract_package.sh $dockerImage $packageDir $GITHUB_OUTPUT
-#       - name: Upload nightly build package
-#         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-#         shell: bash
-#         run: |
-#           tagName=${{ steps.extract.outputs.version }}-nightly
-#           gh release create --prerelease ${tagName} || /bin/true
-#           gh release upload ${tagName} --clobber ./${{ steps.extract.outputs.filename }}
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       - name: Upload release package
-#         uses: softprops/action-gh-release@v1
-#         if: ${{ startsWith(github.ref, 'refs/tags/') }}
-#         with:
-#           name: ${{ steps.extract.outputs.version }}
-#           files: |
-#             ./${{ steps.extract.outputs.filename }}
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
+  #========================================================================
+  debian12_svmtoolpp:
+    name: "Build the package for Debian 12"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.2.0
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          swap-storage: true
+      - name: Build image
+        run: docker build -f ./Dockerfile-debian12 -t aymara/svmtoolpp-debian12:latest .
+      - name: "Push image"
+        run: docker push aymara/svmtoolpp-debian12:latest
+
+  #========================================================================
+  ubuntu22_04_svmtoolpp:
+    name: "Build the package for Ubuntu 22.04"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.2.0
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          swap-storage: true
+      - name: Build image
+        run: docker build -f ./Dockerfile-ubuntu22.04 -t aymara/svmtoolpp-ubuntu22.04:latest .
+      - name: "Push image"
+        run: docker push aymara/svmtoolpp-ubuntu22.04:latest
+
   #========================================================================
   manylinux_2_28_svmtoolpp:
     name: "Build the package for Manylinux 2.28"
