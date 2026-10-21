@@ -134,7 +134,6 @@ Thus, if you improve the software or data, either adding new functionalities, fi
 
 If you want that your changes and improvements become useful to many other people using this free software, please contact us ( jgimenez@lsi.upc.es ).
 
-
 SVMTool Discussion Group
 ========================
 
